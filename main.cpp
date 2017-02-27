@@ -1,3 +1,6 @@
+#include "biharmonic_precompute.h"
+#include "biharmonic_solve.h"
+#include <igl/min_quad_with_fixed.h>
 #include <igl/read_triangle_mesh.h>
 #include <igl/viewer/Viewer.h>
 #include <igl/project.h>
@@ -51,6 +54,7 @@ int main(int argc, char *argv[])
   Eigen::MatrixXi F;
   long sel = -1;
   Eigen::RowVector3f last;
+  igl::min_quad_with_fixed_data<double> biharmonic_data;
 
   // Load input meshes
   igl::read_triangle_mesh(
@@ -77,10 +81,8 @@ int main(int argc, char *argv[])
     }else
     {
 
-      Eigen::VectorXi b;
-      igl::snap_points(s.CV,V,b);
       Eigen::MatrixXd D;
-      igl::harmonic(V,F,b,s.CU-s.CV,2, D);
+      biharmonic_solve(biharmonic_data,s.CU-s.CV,D);
       U = V+D;
       viewer.data.set_vertices(U);
       viewer.data.set_colors(
@@ -178,7 +180,12 @@ int main(int argc, char *argv[])
         s.placing_handles ^= 1;
         if(!s.placing_handles)
         {
+          // Switching to deformation mode
           s.CU = s.CV;
+          // PRECOMPUTATION
+          Eigen::VectorXi b;
+          igl::snap_points(s.CV,V,b);
+          biharmonic_precompute(V,F,b,biharmonic_data);
         }
         break;
       default:
