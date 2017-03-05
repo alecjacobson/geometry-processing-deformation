@@ -1,23 +1,23 @@
 #include "biharmonic_precompute.h"
 #include "biharmonic_solve.h"
+#include "arap_precompute.h"
+#include "arap_single_iteration.h"
 #include <igl/min_quad_with_fixed.h>
 #include <igl/read_triangle_mesh.h>
 #include <igl/viewer/Viewer.h>
 #include <igl/project.h>
 #include <igl/unproject.h>
 #include <igl/snap_points.h>
-#include <igl/slice.h>
-#include <igl/harmonic.h>
 #include <igl/unproject_onto_mesh.h>
 #include <Eigen/Core>
-#include <string>
 #include <iostream>
 #include <stack>
 
+// Undoable
 struct State
 {
-  Eigen::MatrixXd CV;
-  Eigen::MatrixXd CU;
+  // Rest and transformed control points
+  Eigen::MatrixXd CV, CU;
   bool placing_handles = true;
 } s;
 
@@ -53,84 +53,113 @@ int main(int argc, char *argv[])
   Eigen::MatrixXd V,U;
   Eigen::MatrixXi F;
   long sel = -1;
-  Eigen::RowVector3f last;
-  igl::min_quad_with_fixed_data<double> biharmonic_data;
+  Eigen::RowVector3f last_mouse;
+  igl::min_quad_with_fixed_data<double> biharmonic_data, arap_data;
+  Eigen::SparseMatrix<double> arap_K;
 
   // Load input meshes
   igl::read_triangle_mesh(
-    (argc>1?argv[1]:"../shared/data/bunny.off"),V,F);
+    (argc>1?argv[1]:"../shared/data/decimated-knight.off"),V,F);
   U = V;
-  // Load data into MatrixXd rather than VectorXd for simpler `smooth` API
-  // Just use y-coordinates as data to be smoothed
-  // Create a libigl Viewer object to toggle between point cloud and mesh
   igl::viewer::Viewer viewer;
   std::cout<<R"(
-[space]  Toggle whether placing handles or deforming
+[click]  To place new control point
+[drag]   To move control point
+[space]  Toggle whether placing control points or deforming
+M,m      Switch deformation methods
+U,u      Update deformation (i.e., run another iteration of solver)
+R,r      Reset control points 
+⌘ Z      Undo
+⌘ ⇧ Z    Redo
 )";
+  enum Method
+  {
+    BIHARMONIC = 0,
+    ARAP = 1,
+    NUM_METHODS = 2,
+  } method;
 
-  bool plot_parameterization = false;
   const auto & update = [&]()
   {
-    using namespace igl;
+    // predefined colors
+    const Eigen::RowVector3d orange(1.0,0.7,0.2);
+    const Eigen::RowVector3d yellow(1.0,0.9,0.2);
+    const Eigen::RowVector3d blue(0.2,0.3,0.8);
+    const Eigen::RowVector3d green(0.2,0.6,0.3);
     if(s.placing_handles)
     {
       viewer.data.set_vertices(V);
-      viewer.data.set_colors(
-        Eigen::RowVector3d(GOLD_DIFFUSE[0], GOLD_DIFFUSE[1], GOLD_DIFFUSE[2]));
-      viewer.data.set_points(s.CV,Eigen::RowVector3d(1.0,0.5,0.1));
+      viewer.data.set_colors(blue);
+      viewer.data.set_points(s.CV,orange);
     }else
     {
-
-      Eigen::MatrixXd D;
-      biharmonic_solve(biharmonic_data,s.CU-s.CV,D);
-      U = V+D;
+      // SOLVE FOR DEFORMATION
+      switch(method)
+      {
+        default:
+        case BIHARMONIC:
+        {
+          Eigen::MatrixXd D;
+          biharmonic_solve(biharmonic_data,s.CU-s.CV,D);
+          U = V+D;
+          break;
+        }
+        case ARAP:
+        {
+          arap_single_iteration(arap_data,arap_K,s.CU,U);
+          break;
+        }
+      }
       viewer.data.set_vertices(U);
-      viewer.data.set_colors(
-        Eigen::RowVector3d(SILVER_DIFFUSE[0], SILVER_DIFFUSE[1], SILVER_DIFFUSE[2]));
-      viewer.data.set_points(s.CU,Eigen::RowVector3d(1.0,0.5,0.1));
+      viewer.data.set_colors(method==BIHARMONIC?orange:yellow);
+      viewer.data.set_points(s.CU,method==BIHARMONIC?blue:green);
     }
     viewer.data.compute_normals();
   };
   viewer.callback_mouse_down = 
     [&](igl::viewer::Viewer&, int, int)->bool
   {
-    last = Eigen::RowVector3f(
-      viewer.current_mouse_x,
-      viewer.core.viewport(3) - viewer.current_mouse_y,
-      0);
+    last_mouse = Eigen::RowVector3f(
+      viewer.current_mouse_x,viewer.core.viewport(3)-viewer.current_mouse_y,0);
     if(s.placing_handles)
     {
+      // Find closest point on mesh to mouse position
       int fid;
-      Eigen::Vector3f bc;
-      // Cast a ray in the view direction starting from the mouse position
+      Eigen::Vector3f bary;
       if(igl::unproject_onto_mesh(
-        last.head(2),
+        last_mouse.head(2),
         viewer.core.view * viewer.core.model,
         viewer.core.proj, 
         viewer.core.viewport, 
         V, F, 
-        fid, bc))
+        fid, bary))
       {
-        push_undo();
-        s.CV.conservativeResize(s.CV.rows()+1,3);
-        s.CV.row(s.CV.rows()-1) = 
-          V.row(F(fid,0))*bc(0)+ V.row(F(fid,1))*bc(1)+ V.row(F(fid,2))*bc(2);
-        update();
-        return true;
+        long c;
+        bary.minCoeff(&c);
+        Eigen::RowVector3d new_c = V.row(F(fid,c));
+        if(s.CV.size()==0 || (s.CV.rowwise()-new_c).rowwise().norm().minCoeff() > 0)
+        {
+          push_undo();
+          s.CV.conservativeResize(s.CV.rows()+1,3);
+          // Snap to closest vertex on hit face
+          s.CV.row(s.CV.rows()-1) = new_c;
+          update();
+          return true;
+        }
       }
     }else
     {
-      // Get closest control point
+      // Move closest control point
       Eigen::MatrixXf CP;
       igl::project(
         Eigen::MatrixXf(s.CU.cast<float>()),
         viewer.core.view * viewer.core.model, 
         viewer.core.proj, viewer.core.viewport, CP);
-      Eigen::VectorXf D = (CP.rowwise()-last).rowwise().norm();
+      Eigen::VectorXf D = (CP.rowwise()-last_mouse).rowwise().norm();
       sel = (D.minCoeff(&sel) < 30)?sel:-1;
       if(sel != -1)
       {
-        last(2) = CP(sel,2);
+        last_mouse(2) = CP(sel,2);
         push_undo();
         update();
         return true;
@@ -143,16 +172,25 @@ int main(int argc, char *argv[])
   {
     if(sel!=-1)
     {
-      Eigen::RowVector3f drag(
+      Eigen::RowVector3f drag_mouse(
         viewer.current_mouse_x,
         viewer.core.viewport(3) - viewer.current_mouse_y,
-        last(2));
+        last_mouse(2));
       Eigen::RowVector3f drag_scene,last_scene;
-      igl::unproject(drag, viewer.core.view * viewer.core.model, viewer.core.proj,viewer.core.viewport,drag_scene);
-      igl::unproject(last, viewer.core.view * viewer.core.model, viewer.core.proj,viewer.core.viewport,last_scene);
+      igl::unproject(
+        drag_mouse,
+        viewer.core.view*viewer.core.model,
+        viewer.core.proj,
+        viewer.core.viewport,
+        drag_scene);
+      igl::unproject(
+        last_mouse,
+        viewer.core.view*viewer.core.model,
+        viewer.core.proj,
+        viewer.core.viewport,
+        last_scene);
       s.CU.row(sel) += (drag_scene-last_scene).cast<double>();
-      last = drag;
-
+      last_mouse = drag_mouse;
       update();
       return true;
     }
@@ -168,6 +206,12 @@ int main(int argc, char *argv[])
   {
     switch(key)
     {
+      case 'M':
+      case 'm':
+      {
+        method = (Method)(((int)(method)+1)%((int)(NUM_METHODS)));
+        break;
+      }
       case 'R':
       case 'r':
       {
@@ -175,17 +219,24 @@ int main(int argc, char *argv[])
         s.CU = s.CV;
         break;
       }
+      case 'U':
+      case 'u':
+      {
+        // Just trigger an update
+        break;
+      }
       case ' ':
         push_undo();
         s.placing_handles ^= 1;
-        if(!s.placing_handles)
+        if(!s.placing_handles && s.CV.rows()>0)
         {
           // Switching to deformation mode
           s.CU = s.CV;
-          // PRECOMPUTATION
           Eigen::VectorXi b;
           igl::snap_points(s.CV,V,b);
+          // PRECOMPUTATION FOR DEFORMATION
           biharmonic_precompute(V,F,b,biharmonic_data);
+          arap_precompute(V,F,b,arap_data,arap_K);
         }
         break;
       default:
@@ -195,24 +246,15 @@ int main(int argc, char *argv[])
     return true;
   };
 
+  // Special callback for handling undo
   viewer.callback_key_down = 
     [&](igl::viewer::Viewer &, unsigned char key, int mod)->bool
   {
-    switch(key)
+    if(key == 'Z' && (mod & GLFW_MOD_SUPER))
     {
-      case 'Z':
-        if(mod & GLFW_MOD_SUPER)
-        {
-          if(mod & GLFW_MOD_SHIFT)
-          {
-            redo();
-          }else
-          {
-            undo();
-          }
-        }
-        update();
-        break;
+      (mod & GLFW_MOD_SHIFT) ? redo() : undo();
+      update();
+      return true;
     }
     return false;
   };
@@ -221,6 +263,5 @@ int main(int argc, char *argv[])
   viewer.core.is_animating = true;
   update();
   viewer.launch();
-
   return EXIT_SUCCESS;
 }

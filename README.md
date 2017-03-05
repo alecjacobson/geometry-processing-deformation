@@ -77,13 +77,16 @@ Overlapping integration regions
 
 ### Blacklist
 
- - `igl::harmonic`
  - `igl::arap`
+ - `igl::arap_linear_block`
  - `igl::covariance_scatter_matrix`
+ - `igl::harmonic`
 
 ### Whitelist
 
- - `igl::fit_rigid` (or your previous assignment's `closest_rotation`)
+ - `igl::polar_svd3x3` (or your previous assignment's `closest_rotation`)
+ - `igl::min_quad_with_fixed` 
+ - `igl::cotmatrix_entries` 
 
 ### k-harmonic precomputation
 
