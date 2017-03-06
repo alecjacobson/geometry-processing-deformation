@@ -77,7 +77,7 @@ R,r      Reset control points
     BIHARMONIC = 0,
     ARAP = 1,
     NUM_METHODS = 2,
-  } method;
+  } method = BIHARMONIC;
 
   const auto & update = [&]()
   {
@@ -135,7 +135,7 @@ R,r      Reset control points
         fid, bary))
       {
         long c;
-        bary.minCoeff(&c);
+        bary.maxCoeff(&c);
         Eigen::RowVector3d new_c = V.row(F(fid,c));
         if(s.CV.size()==0 || (s.CV.rowwise()-new_c).rowwise().norm().minCoeff() > 0)
         {
@@ -258,9 +258,20 @@ R,r      Reset control points
     }
     return false;
   };
+  viewer.callback_pre_draw = 
+    [&](igl::viewer::Viewer &)->bool
+  {
+    if(viewer.core.is_animating && !s.placing_handles && method == ARAP)
+    {
+      arap_single_iteration(arap_data,arap_K,s.CU,U);
+      update();
+    }
+    return false;
+  };
   viewer.data.set_mesh(V,F);
   viewer.core.show_lines = false;
   viewer.core.is_animating = true;
+  viewer.data.face_based = true;
   update();
   viewer.launch();
   return EXIT_SUCCESS;

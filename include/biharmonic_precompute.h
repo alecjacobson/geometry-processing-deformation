@@ -7,7 +7,10 @@ namespace igl
   template <typename T> struct min_quad_with_fixed_data;
 }
 
-// Precompute data needed to efficiently solve for a biharmonic deformation.
+// Precompute data needed to efficiently solve for a biharmonic deformation
+// given a mesh with vertices `V` and faces `F` and a list of selected vertices
+// as indices `b` into `V`. The output should be a prefacorized system using
+// the `data` struct employed by `igl::min_quad_with_fixed`.
 //
 // Inputs:
 //   V  #V by dim vertex positions
