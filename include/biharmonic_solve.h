@@ -7,7 +7,8 @@ namespace igl
   template <typename T> struct min_quad_with_fixed_data;
 }
 
-// Precompute data needed to efficiently solve for a biharmonic deformation.
+// Given precomputation data and a list of handle _displacements_ determine
+// _displacements_ for all vertices in the mesh.
 //
 // Inputs:
 //   data  pre-factorized system matrix etc. (see `biharmonic_precompute`

@@ -8,7 +8,12 @@ namespace igl
   template <typename T> struct min_quad_with_fixed_data;
 }
 
-// Precompute data needed to efficiently solve for a arap deformation.
+// Precompute data needed to efficiently conduct local-global iterations for an
+// arap deformation. This includes the `data` struct employed by
+// `igl::min_quad_with_fixed` to solve the global step" and constructing the
+// bi-linear form `K` that mixes rotation degrees of freedom with unknown
+// positions for preparing the covariance matrices of the local step and the
+// linear term of the global step.
 //
 // Inputs:
 //   V  #V by dim vertex positions
