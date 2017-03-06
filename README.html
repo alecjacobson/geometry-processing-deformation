@@ -207,11 +207,18 @@ where
 \frac{∂d^x}{∂u} & \frac{∂d^y}{∂u} & \frac{∂d^z}{∂u} \\
 \frac{∂d^x}{∂v} & \frac{∂d^y}{∂v} & \frac{∂d^z}{∂v}
 \end{array}\right)\)</span>
-is the <a href="https://en.wikipedia.org/wiki/Finite_strain_theory#Deformation_gradient_tensor">deformation
+the <a href="https://en.wikipedia.org/wiki/Jacobian_matrix_and_determinant">Jacobian</a>
+matrix of the displacement field <span class="math">\(\d\)</span> </p>
+
+<blockquote>
+<h5 id="deformationgradient">Deformation Gradient</h5>
+
+<p>If <span class="math">\(\I ∈ \R^{3 × 3}\)</span> is the identity matrix, then the quantity <span class="math">\(\F := \I +
+∇\d\)</span> is referred to as the <a href="https://en.wikipedia.org/wiki/Finite_strain_theory#Deformation_gradient_tensor">deformation
 gradient</a>
-or equivalently the
-<a href="https://en.wikipedia.org/wiki/Jacobian_matrix_and_determinant">Jacobian</a>
-matrix of the displacement field <span class="math">\(\d\)</span>.</p>
+in the <a href="https://en.wikipedia.org/wiki/Continuum_mechanics">mechanics</a>
+community.</p>
+</blockquote>
 
 <p>This is simply the familiar <a href="https://en.wikipedia.org/wiki/Dirichlet's_energy">Dirichlet
 energy</a> applied to each
@@ -502,6 +509,28 @@ everywhere, or <em>as-rigid-as-possible</em> (ARAP).</p>
 <img src="images/knight-arap-large-rotation.gif" alt="" />
 </figure>
 
+<blockquote>
+<p>For embedded solid shapes, we can take the rest shape given by <span class="math">\(\hat{\x}\)</span> as
+the parameterization <span class="math">\(Ω\)</span>, so that <span class="math">\(∇\hat{\x} = \I\)</span>. This allows us to rewrite
+the as-rigid-as-possible energy as the square of the difference between the
+<a href="#deformationgradient">deformation gradient</a> and the closest rotation:</p>
+
+<p><span class="math">\[
+∫_Ω \left\|∇\x - \Rot ∇\hat{\x}\right\|² \;dA \\
+∫_Ω \left\|(∇\x + \I - \I) - \Rot \I \right\|² \;dA \\
+∫_Ω \left\|(\I + ∇\x - ∇\hat{x}) - \Rot \right\|² \;dA \\
+∫_Ω \left\|(\I + ∇\d) - \Rot \right\|² \;dA \\
+∫_Ω \left\|\F - \Rot \right\|² \;dA \\
+\]</span></p>
+
+<p>This form provides a bridge between the as-rigid-as-possible energy common in
+geometry processing to <em>corotated linear elasticity</em> used in
+mechanics/physically-based simulation (made explicit in &#8220;A simple geometric
+model for elastic deformations&#8221; [Chao et al. 2010]). See Section 3.4 of &#8220;FEM
+Simulation of 3D Deformable Solids&#8221; [Sifakis 2012] for a graphics-mechanics
+perspective.</p>
+</blockquote>
+
 <h4 id="discreteas-rigid-as-possibleenergy">Discrete as-rigid-as-possible energy</h4>
 
 <p>For a triangle mesh with displacing vertices, the gradient of the embedding
@@ -542,7 +571,7 @@ mesh vertex positions <span class="math">\(\V\)</span> depend on each other requ
 the geometry processing literature, this is known as a local-global
 optimization (see &#8220;As-rigid-as-possible surface modeling&#8221; [Sorkine &amp; Alexa
 2007]). It is also known as &#8220;alternating block coordinate descent&#8221; because we
-have separated the variables into disjoint sets (<span class="math">\(\V,\R_1,…,\R_n\)</span>) and taking
+have separated the variables into disjoint sets (<span class="math">\(\V,\Rot_1,…,\Rot_n\)</span>) and taking
 the optimal descent direction for each independently.</p>
 
 <p>Observing the discrete energy above we can see that the energy is quadratic in
