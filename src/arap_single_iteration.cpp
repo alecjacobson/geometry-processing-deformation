@@ -1,4 +1,5 @@
 #include "arap_single_iteration.h"
+#include <igl/min_quad_with_fixed.h>
 #include <igl/polar_svd3x3.h>
 #include <iostream>
 
@@ -29,13 +30,12 @@ void arap_single_iteration(
         R.block(3*i,i,3,3) = r;;
     }
 
-  Eigen::SparseMatrix<double> KR = K * R;
-  //igl::min_quad_with_fixed_solve(data,B,bc,Beq,U);
+    Eigen::MatrixXd KR = (K * R);
 
   for(int i = 0; i < 3; ++i) {
-      auto Y = bc.col(i);
-      auto B = KR.col(i);
-      auto Beq = Eigen::SparseMatrix<double>();
+      Eigen::VectorXd Y = bc.col(i);
+      Eigen::VectorXd B = KR.col(i);
+      Eigen::VectorXd Beq = Eigen::VectorXd::Zero(data.n);
       Eigen::VectorXd Z = U.col(i);
       igl::min_quad_with_fixed_solve(data,B,Y,Beq,Z);
       U.col(i) = Z;
