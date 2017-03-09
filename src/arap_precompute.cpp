@@ -11,9 +11,9 @@ void compute_cot_diff(
   diff_x = V(a, 0) - V(b, 0);
   diff_y = V(a, 1) - V(b, 1);
   diff_z = V(a, 2) - V(b, 2);
-  tripletList.push_back(Eigen::Triplet<double>(a, 3 * b, cot * diff_x));
-  tripletList.push_back(Eigen::Triplet<double>(a, (3 * b) + 1, cot * diff_y));
-  tripletList.push_back(Eigen::Triplet<double>(a, (3 * b) + 2, cot * diff_z));
+  tripletList.push_back(Eigen::Triplet<double>(a, 3 * b, (1.0/3) * cot * diff_x));
+  tripletList.push_back(Eigen::Triplet<double>(a, (3 * b) + 1, (1.0/3) * cot * diff_y));
+  tripletList.push_back(Eigen::Triplet<double>(a, (3 * b) + 2, (1.0/3) * cot * diff_z));
 }
 
 void arap_precompute(
@@ -40,7 +40,6 @@ void arap_precompute(
     compute_cot_diff(v2, v0, V, L.coeffRef(v2,v0), tripletList);
   }
   K.setFromTriplets(tripletList.begin(), tripletList.end());
-  std::cout << "arap here" << std::endl;
   
   /* Setup inputs to min_quad 
    * L = A
@@ -50,5 +49,4 @@ void arap_precompute(
    * */
   Eigen::SparseMatrix<double> Aeq;
   igl::min_quad_with_fixed_precompute(L, b, Aeq, false, data);
-  std::cout << "arap here end" << std::endl;
 }
