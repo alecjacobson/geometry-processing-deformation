@@ -77,7 +77,7 @@ R,r      Reset control points
     BIHARMONIC = 0,
     ARAP = 1,
     NUM_METHODS = 2,
-  } method = BIHARMONIC;
+  } method = ARAP;
 
   const auto & update = [&]()
   {
