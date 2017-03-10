@@ -1,4 +1,5 @@
 #include "arap_precompute.h"
+#include <iostream>
 #include <igl/cotmatrix.h>
 #include <igl/cotmatrix_entries.h>
 #include <igl/min_quad_with_fixed.h>
@@ -11,13 +12,19 @@ void arap_precompute(
   Eigen::SparseMatrix<double> & K)
 {
 
+    std::cout << "Numerical issues start?" << std::endl;
     Eigen::SparseMatrix<double> L;
     igl::cotmatrix(V,F,L);
+    L = -L;
+    std::cout << "Precompute?" << std::endl;
+    igl::min_quad_with_fixed_precompute(L,b,Eigen::SparseMatrix<double>(), true,data);
+    std::cout << "Numerical issues?" << std::endl;
 
     Eigen::MatrixXd C;
     igl::cotmatrix_entries(V,F,C);
     std::vector<Eigen::Triplet<double>> trips;
 
+    std::cout << "C: " << std::endl << C << std::endl;
     K = Eigen::SparseMatrix<double>(V.rows(), 3 * V.rows());
     for(int k = 0; k < F.rows(); ++k) {
         auto&& f = F.row(k);
@@ -30,6 +37,7 @@ void arap_precompute(
             Eigen::RowVector3d ca = c-a;
             Eigen::RowVector3d cb = c-b;
 
+            std::cout << "CB: " << cb << std::endl;
 
             double cot = C(k,i);
 
@@ -45,6 +53,5 @@ void arap_precompute(
 
 
 
-    igl::min_quad_with_fixed_precompute(L,b,Eigen::SparseMatrix<double>(), true,data);
 
 }

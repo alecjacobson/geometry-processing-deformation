@@ -18,17 +18,20 @@ void arap_single_iteration(
         V.block(3*i,0,3,1) = U.row(i).transpose();
     }
 
-    std::cout << "K shape: " << K.rows() << " " << K.cols() << std::endl;
-    std::cout << "U shape: " << U.rows() << " " << U.cols() << std::endl;
+    std::cout << "K: " << std::endl << K << std::endl;
+    std::cout << "U: " << std::endl << U << std::endl;
 
     Eigen::MatrixXd  C = K.transpose() * U;
+    std::cout << "C: " << std::endl << C << std::endl;
 
     for(int i = 0; i < U.rows(); ++i) {
-        auto a = C.block(3*i,i,3,3);
+        auto a = C.block(3*i,0,3,3);
         Eigen::Matrix3d r;
         igl::polar_svd3x3<Eigen::Matrix3d>(a,r);
-        R.block(3*i,i,3,3) = r;;
+        R.block(3*i,0,3,3) = r;
+        std::cout << a << std::endl << std::endl;
     }
+    return;
 
     Eigen::MatrixXd KR = (K * R);
 

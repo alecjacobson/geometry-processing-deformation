@@ -79,6 +79,13 @@ R,r      Reset control points
     NUM_METHODS = 2,
   } method = BIHARMONIC;
 
+  Eigen::VectorXi b(1);
+  b(0) = 0;
+  s.CU = V.row(0);
+
+  arap_precompute(V,F,b,arap_data,arap_K);
+  arap_single_iteration(arap_data,arap_K,s.CU,U);
+  exit(0);
   const auto & update = [&]()
   {
     // predefined colors
