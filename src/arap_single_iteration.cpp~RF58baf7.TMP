@@ -14,6 +14,8 @@ void arap_single_iteration(
 	int n = data.n;
 
 	MatrixXd C = U.transpose()*K;
+	//maybe this is needed
+	C = -C/2;
 
 	MatrixXd R(3 * n, 3);
 
@@ -30,9 +32,8 @@ void arap_single_iteration(
 		std::cout << (r - Matrix3d::Identity()).norm() << std::endl;
 	}
 
-	std::flush(std::cout);
 
-	MatrixXd B = -2*K*R;
+	MatrixXd B = K*R;
 
 	igl::min_quad_with_fixed_solve(data, B, bc, MatrixXd(0, 0), U);
 }

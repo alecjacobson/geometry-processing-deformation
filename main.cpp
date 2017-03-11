@@ -250,7 +250,7 @@ R,r      Reset control points
   viewer.callback_key_down = 
     [&](igl::viewer::Viewer &, unsigned char key, int mod)->bool
   {
-    if(key == 'Z' && (mod & GLFW_MOD_SUPER))
+    if(key == 'Z' && (mod & (GLFW_MOD_SUPER | GLFW_MOD_CONTROL)))
     {
       (mod & GLFW_MOD_SHIFT) ? redo() : undo();
       update();
