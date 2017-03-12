@@ -14,20 +14,20 @@ void compute_cot_diff(
   diff_z = V(a, 2) - V(b, 2);
   double val = 0.5 * cot;
   
-  tripletList.push_back(Eigen::Triplet<double>(a, b, val * diff_x));
-  tripletList.push_back(Eigen::Triplet<double>(b, a, val * -diff_x));
-  tripletList.push_back(Eigen::Triplet<double>(a, a, val * diff_x));
-  tripletList.push_back(Eigen::Triplet<double>(b, b, val * -diff_x));
+  tripletList.push_back(Eigen::Triplet<double>(a, 3*b, val * diff_x));
+  tripletList.push_back(Eigen::Triplet<double>(b, 3*a, val * -diff_x));
+  tripletList.push_back(Eigen::Triplet<double>(a, 3*a, val * diff_x));
+  tripletList.push_back(Eigen::Triplet<double>(b, 3*b, val * -diff_x));
   
-  tripletList.push_back(Eigen::Triplet<double>(a, num_v + b, val * diff_y));
-  tripletList.push_back(Eigen::Triplet<double>(b, num_v + a, val * -diff_y));
-  tripletList.push_back(Eigen::Triplet<double>(a, num_v + a, val * diff_y));
-  tripletList.push_back(Eigen::Triplet<double>(b, num_v + b, val * -diff_y));
+  tripletList.push_back(Eigen::Triplet<double>(a, 3*b + 1, val * diff_y));
+  tripletList.push_back(Eigen::Triplet<double>(b, 3*a + 1, val * -diff_y));
+  tripletList.push_back(Eigen::Triplet<double>(a, 3*a + 1, val * diff_y));
+  tripletList.push_back(Eigen::Triplet<double>(b, 3*b + 1, val * -diff_y));
   
-  tripletList.push_back(Eigen::Triplet<double>(a, 2*num_v + b, val * diff_z));
-  tripletList.push_back(Eigen::Triplet<double>(b, 2*num_v + a, val * -diff_z));
-  tripletList.push_back(Eigen::Triplet<double>(a, 2*num_v + a, val * diff_z));
-  tripletList.push_back(Eigen::Triplet<double>(b, 2*num_v + b, val * -diff_z));
+  tripletList.push_back(Eigen::Triplet<double>(a, 3*b + 2, val * diff_z));
+  tripletList.push_back(Eigen::Triplet<double>(b, 3*a + 2, val * -diff_z));
+  tripletList.push_back(Eigen::Triplet<double>(a, 3*a + 2, val * diff_z));
+  tripletList.push_back(Eigen::Triplet<double>(b, 3*b + 2, val * -diff_z));
 }
 
 void arap_precompute(

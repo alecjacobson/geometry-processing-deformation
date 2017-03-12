@@ -25,7 +25,7 @@ void arap_single_iteration(
   
   // Construct B
   Eigen::MatrixXd B(n, 3);
-  B = (1.0/3) * K * R;
+  B = 0.5 * K * R;
   
   /* Setup inputs to min_quad
    * data = data
