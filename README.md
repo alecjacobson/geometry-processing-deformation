@@ -72,7 +72,7 @@ topology (connectivity) of the mesh ($F$) will not change.
 
 A rest surface $\hat{S}$
 [immersed](https://en.wikipedia.org/wiki/Immersion_(mathematics)) in $\R³$ can
-be described as a mapping $\hat{\x}$ from _some_ 2D parameteric domain $Ω$. For any
+be described as a mapping $\hat{\x}$ from _some_ 2D parametric domain $Ω$. For any
 parameters $u$ and $v$, $\hat{\x}$ describes the 3D position:
 
 \\[
@@ -466,6 +466,17 @@ c_{ij} ‖ (\v_i-\v_j) - \Rot_k (\hat{\v}_i-\hat{\v}_j)‖²,
 \\]
 where $F(k)$ is the set of all faces incident on the $k$-th vertex.
 
+> ##### Where do rotations _live_?
+> We have assigned a rotation for each vertex: there are $n$ rotation matrices
+> as auxiliary degrees of freedom. This is in contrast to assigning
+> rotations per face (as in "A Local/Global Approach to Mesh Parameterization"
+> [Liu et al. 2008]). Per-face--or more generally per-element--rotations work
+> well for [codimension](https://en.wikipedia.org/wiki/Codimension) zero
+> objects (triangle meshes in $\R²$ or tetrahedral meshes in $\R³$). But for
+> triangle mesh surfaces in $\R³$ (i.e., codimension 1), per-face rotations
+> would lead to "crumpling") because _bending_ along edges would not be
+> measured.
+
 #### Optimization
 
 The simplest method for optimizing the ARAP energy is by alternating between
@@ -506,7 +517,7 @@ differences across edges in the rest mesh (e.g., $\hat{\v}_i - \hat{\v}_j$).
 
 ##### Local step
 
-Minimizing this energy with respect $\R$ corresponds to minimizing:
+Minimizing this energy with respect $\Rot$ corresponds to minimizing:
 
 \\[
 \tr{ \underbrace{\V^\transpose \K}_{\C^\transpose} \Rot },
