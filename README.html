@@ -3,54 +3,58 @@
 <head>
 	<meta charset="utf-8"/>
 	<link type="text/css" rel="stylesheet" href="shared/css/style.css"/>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({ TeX: { equationNumbers: {autoNumber: "all"} } });
+</script>
 <script type="text/javascript" src="shared/js/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 </head>
 <body>
 
 <div style="display:none">
-<span class="math">\[\newcommand{\mat}[1]{\mathbf{#1}}\]</span>
-<span class="math">\[\newcommand{\vec}[1]{\mathbf{#1}}\]</span>
-<span class="math">\[\newcommand{\A}{\mat{A}}\]</span>
-<span class="math">\[\newcommand{\B}{\mat{B}}\]</span>
-<span class="math">\[\newcommand{\C}{\mat{C}}\]</span>
-<span class="math">\[\newcommand{\D}{\mat{D}}\]</span>
-<span class="math">\[\newcommand{\E}{\mat{E}}\]</span>
-<span class="math">\[\newcommand{\I}{\mat{I}}\]</span>
-<span class="math">\[\newcommand{\G}{\mat{G}}\]</span>
-<span class="math">\[\newcommand{\N}{\mat{N}}\]</span>
-<span class="math">\[\newcommand{\Q}{\mat{Q}}\]</span>
-<span class="math">\[\newcommand{\P}{\mat{P}}\]</span>
-<span class="math">\[\newcommand{\Rot}{\mat{R}}\]</span>
-<span class="math">\[\newcommand{\R}{\mathbb{R}}\]</span>
-<span class="math">\[\newcommand{\One}{\mathbf{1}}\]</span>
-<span class="math">\[\newcommand{\S}{\mathcal{S}}\]</span>
-<span class="math">\[\newcommand{\T}{\mat{T}}\]</span>
-<span class="math">\[\newcommand{\M}{\mat{M}}\]</span>
-<span class="math">\[\newcommand{\K}{\mat{K}}\]</span>
-<span class="math">\[\newcommand{\U}{\mat{U}}\]</span>
-<span class="math">\[\newcommand{\L}{\mat{L}}\]</span>
-<span class="math">\[\newcommand{\V}{\mat{V}}\]</span>
-<span class="math">\[\newcommand{\W}{\mat{W}}\]</span>
-<span class="math">\[\newcommand{\X}{\mat{X}}\]</span>
-<span class="math">\[\newcommand{\Y}{\mat{Y}}\]</span>
-<span class="math">\[\newcommand{\c}{\vec{c}}\]</span>
-<span class="math">\[\newcommand{\f}{\vec{f}}\]</span>
-<span class="math">\[\newcommand{\g}{\vec{g}}\]</span>
-<span class="math">\[\newcommand{\n}{\vec{n}}\]</span>
-<span class="math">\[\newcommand{\d}{\vec{d}}\]</span>
-<span class="math">\[\newcommand{\e}{\vec{e}}\]</span>
-<span class="math">\[\newcommand{\p}{\vec{p}}\]</span>
-<span class="math">\[\newcommand{\tr}[1]{\mathop{\text{tr}}{\left(#1\right)}}\]</span>
-<span class="math">\[\newcommand{\t}{\vec{t}}\]</span>
-<span class="math">\[\newcommand{\x}{\vec{x}}\]</span>
-<span class="math">\[\newcommand{\y}{\vec{y}}\]</span>
-<span class="math">\[\newcommand{\u}{\vec{u}}\]</span>
-<span class="math">\[\newcommand{\z}{\vec{z}}\]</span>
-<span class="math">\[\renewcommand{\v}{\vec{v}}\]</span>
-<span class="math">\[\newcommand{\transpose}{{\mathsf T}}\]</span>
-<span class="math">\[\newcommand{\min}{\mathop{\text{min}}}\]</span>
-<span class="math">\[\newcommand{\argmin}{\mathop{\text{argmin}}}\]</span>
-<span class="math">\[\newcommand{\argmax}{\mathop{\text{argmax}}}\]</span>
+<span class="math">\(\newcommand{\A}{\mat{A}}\)</span>
+<span class="math">\(\newcommand{\B}{\mat{B}}\)</span>
+<span class="math">\(\newcommand{\C}{\mat{C}}\)</span>
+<span class="math">\(\newcommand{\D}{\mat{D}}\)</span>
+<span class="math">\(\newcommand{\E}{\mat{E}}\)</span>
+<span class="math">\(\newcommand{\F}{\mat{F}}\)</span>
+<span class="math">\(\newcommand{\G}{\mat{G}}\)</span>
+<span class="math">\(\newcommand{\I}{\mat{I}}\)</span>
+<span class="math">\(\newcommand{\K}{\mat{K}}\)</span>
+<span class="math">\(\newcommand{\L}{\mat{L}}\)</span>
+<span class="math">\(\newcommand{\M}{\mat{M}}\)</span>
+<span class="math">\(\newcommand{\N}{\mat{N}}\)</span>
+<span class="math">\(\newcommand{\One}{\mathbf{1}}\)</span>
+<span class="math">\(\newcommand{\P}{\mat{P}}\)</span>
+<span class="math">\(\newcommand{\Q}{\mat{Q}}\)</span>
+<span class="math">\(\newcommand{\Rot}{\mat{R}}\)</span>
+<span class="math">\(\newcommand{\R}{\mathbb{R}}\)</span>
+<span class="math">\(\newcommand{\S}{\mathcal{S}}\)</span>
+<span class="math">\(\newcommand{\T}{\mat{T}}\)</span>
+<span class="math">\(\newcommand{\U}{\mat{U}}\)</span>
+<span class="math">\(\newcommand{\V}{\mat{V}}\)</span>
+<span class="math">\(\newcommand{\W}{\mat{W}}\)</span>
+<span class="math">\(\newcommand{\X}{\mat{X}}\)</span>
+<span class="math">\(\newcommand{\Y}{\mat{Y}}\)</span>
+<span class="math">\(\newcommand{\argmax}{\mathop{\text{argmax}}}\)</span>
+<span class="math">\(\newcommand{\argmin}{\mathop{\text{argmin}}}\)</span>
+<span class="math">\(\newcommand{\c}{\vec{c}}\)</span>
+<span class="math">\(\newcommand{\d}{\vec{d}}\)</span>
+<span class="math">\(\newcommand{\e}{\vec{e}}\)</span>
+<span class="math">\(\newcommand{\f}{\vec{f}}\)</span>
+<span class="math">\(\newcommand{\g}{\vec{g}}\)</span>
+<span class="math">\(\newcommand{\mat}[1]{\mathbf{#1}}\)</span>
+<span class="math">\(\newcommand{\min}{\mathop{\text{min}}}\)</span>
+<span class="math">\(\newcommand{\n}{\vec{n}}\)</span>
+<span class="math">\(\newcommand{\p}{\vec{p}}\)</span>
+<span class="math">\(\newcommand{\transpose}{{\mathsf T}}\)</span>
+<span class="math">\(\newcommand{\tr}[1]{\mathop{\text{tr}}{\left(#1\right)}}\)</span>
+<span class="math">\(\newcommand{\t}{\vec{t}}\)</span>
+<span class="math">\(\newcommand{\u}{\vec{u}}\)</span>
+<span class="math">\(\newcommand{\vec}[1]{\mathbf{#1}}\)</span>
+<span class="math">\(\newcommand{\x}{\vec{x}}\)</span>
+<span class="math">\(\newcommand{\y}{\vec{y}}\)</span>
+<span class="math">\(\newcommand{\z}{\vec{z}}\)</span>
+<span class="math">\(\renewcommand{\v}{\vec{v}}\)</span>
 </div>
 
 <h1 id="geometryprocessing–deformation">Geometry Processing – Deformation</h1>
