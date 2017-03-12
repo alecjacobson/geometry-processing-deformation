@@ -138,7 +138,7 @@ topology (connectivity) of the mesh (<span class="math">\(F\)</span>) will not c
 
 <p>A rest surface <span class="math">\(\hat{S}\)</span>
 <a href="https://en.wikipedia.org/wiki/Immersion_(mathematics)">immersed</a> in <span class="math">\(\R³\)</span> can
-be described as a mapping <span class="math">\(\hat{\x}\)</span> from <em>some</em> 2D parameteric domain <span class="math">\(Ω\)</span>. For any
+be described as a mapping <span class="math">\(\hat{\x}\)</span> from <em>some</em> 2D parametric domain <span class="math">\(Ω\)</span>. For any
 parameters <span class="math">\(u\)</span> and <span class="math">\(v\)</span>, <span class="math">\(\hat{\x}\)</span> describes the 3D position:</p>
 
 <p><span class="math">\[
@@ -558,6 +558,20 @@ c_{ij} ‖ (\v_i-\v_j) - \Rot_k (\hat{\v}_i-\hat{\v}_j)‖²,
 \]</span>
 where <span class="math">\(F(k)\)</span> is the set of all faces incident on the <span class="math">\(k\)</span>-th vertex.</p>
 
+<blockquote>
+<h5 id="wheredorotationslive">Where do rotations <em>live</em>?</h5>
+
+<p>We have assigned a rotation for each vertex: there are <span class="math">\(n\)</span> rotation matrices
+as auxiliary degrees of freedom. This is in contrast to assigning
+rotations per face (as in &#8220;A Local/Global Approach to Mesh Parameterization&#8221;
+[Liu et al. 2008]). Per-face&#8211;or more generally per-element&#8211;rotations work
+well for <a href="https://en.wikipedia.org/wiki/Codimension">codimension</a> zero
+objects (triangle meshes in <span class="math">\(\R²\)</span> or tetrahedral meshes in <span class="math">\(\R³\)</span>). But for
+triangle mesh surfaces in <span class="math">\(\R³\)</span> (i.e., codimension 1), per-face rotations
+would lead to &#8220;crumpling&#8221;) because <em>bending</em> along edges would not be
+measured.</p>
+</blockquote>
+
 <h4 id="optimization">Optimization</h4>
 
 <p>The simplest method for optimizing the ARAP energy is by alternating between</p>
@@ -600,7 +614,7 @@ differences across edges in the rest mesh (e.g., <span class="math">\(\hat{\v}_i
 
 <h5 id="localstep">Local step</h5>
 
-<p>Minimizing this energy with respect <span class="math">\(\R\)</span> corresponds to minimizing:</p>
+<p>Minimizing this energy with respect <span class="math">\(\Rot\)</span> corresponds to minimizing:</p>
 
 <p><span class="math">\[
 \tr{ \underbrace{\V^\transpose \K}_{\C^\transpose} \Rot },
