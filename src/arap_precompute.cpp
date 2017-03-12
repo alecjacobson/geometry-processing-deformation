@@ -7,13 +7,27 @@ void compute_cot_diff(
   const int a, const int b, const Eigen::MatrixXd & V, const double cot, 
   std::vector<Eigen::Triplet<double>> & tripletList)
 {
+  int num_v = V.rows();
   double diff_x, diff_y, diff_z;
   diff_x = V(a, 0) - V(b, 0);
   diff_y = V(a, 1) - V(b, 1);
   diff_z = V(a, 2) - V(b, 2);
-  tripletList.push_back(Eigen::Triplet<double>(a, 3 * b, (1.0/3) * cot * diff_x));
-  tripletList.push_back(Eigen::Triplet<double>(a, (3 * b) + 1, (1.0/3) * cot * diff_y));
-  tripletList.push_back(Eigen::Triplet<double>(a, (3 * b) + 2, (1.0/3) * cot * diff_z));
+  double val = 0.5 * cot;
+  
+  tripletList.push_back(Eigen::Triplet<double>(a, b, val * diff_x));
+  tripletList.push_back(Eigen::Triplet<double>(b, a, val * -diff_x));
+  tripletList.push_back(Eigen::Triplet<double>(a, a, val * diff_x));
+  tripletList.push_back(Eigen::Triplet<double>(b, b, val * -diff_x));
+  
+  tripletList.push_back(Eigen::Triplet<double>(a, num_v + b, val * diff_y));
+  tripletList.push_back(Eigen::Triplet<double>(b, num_v + a, val * -diff_y));
+  tripletList.push_back(Eigen::Triplet<double>(a, num_v + a, val * diff_y));
+  tripletList.push_back(Eigen::Triplet<double>(b, num_v + b, val * -diff_y));
+  
+  tripletList.push_back(Eigen::Triplet<double>(a, 2*num_v + b, val * diff_z));
+  tripletList.push_back(Eigen::Triplet<double>(b, 2*num_v + a, val * -diff_z));
+  tripletList.push_back(Eigen::Triplet<double>(a, 2*num_v + a, val * diff_z));
+  tripletList.push_back(Eigen::Triplet<double>(b, 2*num_v + b, val * -diff_z));
 }
 
 void arap_precompute(

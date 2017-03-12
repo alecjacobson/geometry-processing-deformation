@@ -33,11 +33,6 @@ void arap_single_iteration(
    * Y = bc
    * Beq = empty vector
    */
-  Eigen::VectorXd Beq(data.n), x(data.n), y(data.n) ,z(data.n);
-  igl::min_quad_with_fixed_solve(data, B.col(0), bc.col(0), Beq, x);
-  igl::min_quad_with_fixed_solve(data, B.col(1), bc.col(1), Beq, y);
-  igl::min_quad_with_fixed_solve(data, B.col(2), bc.col(2), Beq, z);
-  U.col(0) = x;
-  U.col(1) = y;
-  U.col(2) = z;
+  Eigen::VectorXd Beq(n);
+  igl::min_quad_with_fixed_solve(data, B, bc, Beq, U);
 }

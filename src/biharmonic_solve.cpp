@@ -15,13 +15,6 @@ void biharmonic_solve(
    * Z = D
    */
   Eigen::VectorXd B(data.n), Beq(data.n), x(data.n), y(data.n), z(data.n);
-  igl::min_quad_with_fixed_solve(data, B, bc.col(0), Beq, x);
-  igl::min_quad_with_fixed_solve(data, B, bc.col(1), Beq, y);
-  igl::min_quad_with_fixed_solve(data, B, bc.col(2), Beq, z);
-  
-  D.resize(data.n, 3);
-  D.col(0) = x;
-  D.col(1) = y;
-  D.col(2) = z;
+  igl::min_quad_with_fixed_solve(data, B, bc, Beq, D);
 }
 
