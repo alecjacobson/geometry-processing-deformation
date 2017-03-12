@@ -21,11 +21,13 @@ void arap_precompute(
 	igl::min_quad_with_fixed_precompute(L, b, Aeq, false, data);
 	
 	//Next, construct K.
-	
+	Eigen::MatrixX3d cotangents;
+	igl::cotmatrix_entries(V, F, cotangents);
 	int num_faces = F.rows();
 	for (int f = 0; f < num_faces; f++) {
 		for (int v = 0; v < 3; v++) {
-			Eigen::RowVector3f edge = V.row(F(f, (v + 1) % 3)) - V.row(F(f, v));
+			Eigen::RowVector3f edge = V.row(F(f, v)) - V.row(F(f, (v + 1) % 3));
+
 
 		}
 	}
