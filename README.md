@@ -72,7 +72,7 @@ topology (connectivity) of the mesh ($F$) will not change.
 
 A rest surface $\hat{S}$
 [immersed](https://en.wikipedia.org/wiki/Immersion_(mathematics)) in $\R³$ can
-be described as a mapping $\hat{\x}$ from _some_ 2D parameteric domain $Ω$. For any
+be described as a mapping $\hat{\x}$ from _some_ 2D parametric domain $Ω$. For any
 parameters $u$ and $v$, $\hat{\x}$ describes the 3D position:
 
 \\[
