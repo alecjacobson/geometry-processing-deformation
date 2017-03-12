@@ -13,6 +13,7 @@
 #include <iostream>
 #include <stack>
 
+double scale = 1.0;
 // Undoable
 struct State
 {
@@ -57,9 +58,24 @@ int main(int argc, char *argv[])
   igl::min_quad_with_fixed_data<double> biharmonic_data, arap_data;
   Eigen::SparseMatrix<double> arap_K;
 
-  // Load input meshes
-  igl::read_triangle_mesh(
+  std::cout << "First arg: (" << argv[1] << ")" << std::endl;
+  if(argc > 1 && std::string(argv[1]) == "debug") {
+      std::cout << "Dbug loading: " << (argc>2?argv[2]:"../shared/data/decimated-knight.off") << std::endl;
+      igl::read_triangle_mesh(
+              (argc>2?argv[2]:"../shared/data/decimated-knight.off"),V,F);
+
+      Eigen::VectorXi b(1);
+      b(0) = 0;
+      s.CU = V.row(0);
+
+      arap_precompute(V,F,b,arap_data,arap_K);
+      arap_single_iteration(arap_data,arap_K,s.CU,U);
+      return 0;
+  } else {
+      // Load input meshes
+      igl::read_triangle_mesh(
     (argc>1?argv[1]:"../shared/data/decimated-knight.off"),V,F);
+  }
   U = V;
   igl::viewer::Viewer viewer;
   std::cout<<R"(
@@ -78,14 +94,6 @@ R,r      Reset control points
     ARAP = 1,
     NUM_METHODS = 2,
   } method = BIHARMONIC;
-
-  Eigen::VectorXi b(1);
-  b(0) = 0;
-  s.CU = V.row(0);
-
-  arap_precompute(V,F,b,arap_data,arap_K);
-  arap_single_iteration(arap_data,arap_K,s.CU,U);
-  exit(0);
   const auto & update = [&]()
   {
     // predefined colors
@@ -113,7 +121,9 @@ R,r      Reset control points
         }
         case ARAP:
         {
-          arap_single_iteration(arap_data,arap_K,s.CU,U);
+          Eigen::SparseMatrix<double> sK = scale * arap_K;
+          arap_single_iteration(arap_data,sK,s.CU,U);
+          //arap_single_iteration(arap_data,arap_K,s.CU,U);
           break;
         }
       }
@@ -229,6 +239,24 @@ R,r      Reset control points
       case 'U':
       case 'u':
       {
+        // Just trigger an update
+        break;
+      }
+      case '9':
+      {
+          scale /= 2;
+        // Just trigger an update
+        break;
+      }
+      case '0':
+      {
+          scale *= 2;
+        // Just trigger an update
+        break;
+      }
+      case '-':
+      {
+          scale *= -1;
         // Just trigger an update
         break;
       }
