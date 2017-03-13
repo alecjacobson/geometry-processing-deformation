@@ -58,7 +58,9 @@ int main(int argc, char *argv[])
   igl::min_quad_with_fixed_data<double> biharmonic_data, arap_data;
   Eigen::SparseMatrix<double> arap_K;
 
-  std::cout << "First arg: (" << argv[1] << ")" << std::endl;
+  if(argc > 1) {
+      std::cout << "First arg: (" << argv[1] << ")" << std::endl;
+  }
   if(argc > 1 && std::string(argv[1]) == "debug") {
       std::cout << "Dbug loading: " << (argc>2?argv[2]:"../shared/data/decimated-knight.off") << std::endl;
       igl::read_triangle_mesh(
@@ -69,7 +71,7 @@ int main(int argc, char *argv[])
       s.CU = V.row(0);
 
       arap_precompute(V,F,b,arap_data,arap_K);
-      arap_single_iteration(arap_data,arap_K,s.CU,U);
+      //arap_single_iteration(arap_data,arap_K,s.CU,U);
       return 0;
   } else {
       // Load input meshes

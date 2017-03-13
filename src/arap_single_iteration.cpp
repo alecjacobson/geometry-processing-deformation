@@ -18,15 +18,10 @@ void arap_single_iteration(
     Eigen::MatrixXd  C = K.transpose() * U;
 
     for(int i = 0; i < U.rows(); ++i) {
-        Eigen::Matrix3d a;
-        for(int j = 0; j < 3; ++j) {
-            a.col(j) = C.row(i + j * U.rows());
-        }
+        Eigen::Matrix3d a = C.block(3*i,0,3,3);
         Eigen::Matrix3d r;
         igl::polar_svd3x3<Eigen::Matrix3d>(a,r);
-        for(int j = 0; j < 3; ++j) {
-            R.row(i + U.rows() * j) = r.col(j);
-        }
+        R.block(3*i,0,3,3) = r.transpose();
     }
 
     Eigen::MatrixXd KR =   (K * R);
