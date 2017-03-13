@@ -27,7 +27,7 @@ void arap_single_iteration(
 
 		R.block(3 * i, 0, 3, 3) = r;
 
-		std::cout << (r - Matrix3d::Identity()).norm() << std::endl;
+		std::cout << (c - Matrix3d::Identity()).norm() << std::endl;
 	}
 
 	std::flush(std::cout);

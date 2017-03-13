@@ -31,6 +31,6 @@ void biharmonic_precompute(
 
 	Q.eval();
 
-	igl::min_quad_with_fixed_precompute(Q, b, SparseMatrix<double>(0, 0), false, data);
+	igl::min_quad_with_fixed_precompute(Q, b, SparseMatrix<double>(0, 0), true, data);
 }
 

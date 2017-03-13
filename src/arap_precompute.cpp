@@ -17,11 +17,14 @@ void arap_precompute(
 
 	SparseMatrix<double> L;
 	igl::cotmatrix(V, F, L);
+	L = -L;
 
-	igl::min_quad_with_fixed_precompute(L, b, SparseMatrix<double>(0, 0), false, data);
+	igl::min_quad_with_fixed_precompute(L, b, SparseMatrix<double>(0, 0), true, data);
 
 	MatrixXd C(f, 3);
 	igl::cotmatrix_entries(V, F, C);
+
+	C *= 2;
 
 	K.resize(n, 3*n);
 	std::vector<Triplet<double>> K_val;
@@ -41,7 +44,7 @@ void arap_precompute(
 
 				for (int dim = 0; dim < 3; ++dim)
 				{
-					K_val.push_back({ vk, 3 * vk + dim, C(face, edge) * (V(vi, dim) - V(vj, dim)) });
+					K_val.push_back({ vk, vk + n * dim, C(face, edge) * (V(vi, dim) - V(vj, dim)) });
 					//std::cout << C(face, vtx) * (V(v1, dim) - V(v2, dim)) << std::endl;
 				}
 			}
