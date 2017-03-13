@@ -30,6 +30,7 @@ void arap_precompute(
 	//Fingers crossed that this is correct. Super unsure.
 	std::vector<Eigen::Triplet<double>> entries;
 	for (int f = 0; f < num_faces; f++) {
+
 		Eigen::RowVector3d c = cot_entries.row(f);
 		for (int v = 0; v < 3; v++) {
 			int i = F(f, (v + 1) % 3);
@@ -37,19 +38,17 @@ void arap_precompute(
 			Eigen::RowVector3d edge = V.row(i) - V.row(j);
 			
 			for (int k = 0; k < 3; k++) {
-				int ki = F(v, k);
-				entries.emplace_back(i, 3 * ki + 0, c(v)*edge(0));
-				entries.emplace_back(i, 3 * ki + 1, c(v)*edge(1));
-				entries.emplace_back(i, 3 * ki + 2, c(v)*edge(2));
+				int ki = F(f, k);
+				
+				for (int dim = 0; dim < 3; dim++) {
+					entries.emplace_back(i, 3 * ki + dim, c(v)*edge(dim));
+					entries.emplace_back(j, 3 * ki + dim, -c(v)*edge(dim));
+				}
 
-				entries.emplace_back(j, 3 * ki + 0, -c(v)*edge(0));
-				entries.emplace_back(j, 3 * ki + 1, -c(v)*edge(1));
-				entries.emplace_back(j, 3 * ki + 2, -c(v)*edge(2));
 			}
 		}
 	}
 	K.resize(V.rows(), 3 * V.rows());
 	K.setFromTriplets(entries.begin(), entries.end());
-
 
 }

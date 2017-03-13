@@ -10,15 +10,16 @@ void arap_single_iteration(
 	Eigen::MatrixXd & U)
 {
 
-	//For this, we first do a local step, finding the optimal rotations.
+	////For this, we first do a local step, finding the optimal rotations.
 	int n = U.rows();
 	Eigen::MatrixXd C = K.transpose()*U;
 	Eigen::MatrixXd R;
 	R.resizeLike(C);
 	for (int i = 0; i < n; i++) {
 		Eigen::Matrix3d rot;
-		closest_rotation(C.block(3 * i, 0, 3, 3), rot);
-		//igl::polar_svd3x3<Eigen::Matrix3d>(C.block(3 * i, 0, 3, 3), rot);
+		//closest_rotation(C.block(3 * i, 0, 3, 3), rot);
+		Eigen::Matrix3d a = C.block(3 * i, 0, 3, 3);
+		igl::polar_svd3x3<Eigen::Matrix3d>(a, rot);
 		R.block(3 * i, 0, 3, 3) = rot;
 		
 	}
@@ -28,4 +29,6 @@ void arap_single_iteration(
 	//Finally, just solve for LV = B in each of the three dimensions.
 	
 	igl::min_quad_with_fixed_solve(data, B, bc, Eigen::MatrixXd(0, 0), U);
+
+
 }
