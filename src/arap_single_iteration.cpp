@@ -15,24 +15,34 @@ void arap_single_iteration(
 
 	MatrixXd C = U.transpose()*K;
 
+	C.transposeInPlace();
+
+	//std::cout << C << std::endl;
+	//std::cout << std::endl;
+
 	MatrixXd R(3 * n, 3);
 
 	Matrix3d r, c;
 
 	for (int i = 0; i < n; ++i)
 	{
-		c = C.block(0, 3 * i, 3, 3);
+		c = C.block(3 * i, 0, 3, 3);
 
 		igl::polar_svd3x3(c, r);
 
+		//r.setIdentity();
+
 		R.block(3 * i, 0, 3, 3) = r;
 
-		std::cout << (c - Matrix3d::Identity()).norm() << std::endl;
+		//std::cout << (r - Matrix3d::Identity()).norm() << ' ';
 	}
 
-	std::flush(std::cout);
+	//std::cout << std::endl << std::endl;
 
-	MatrixXd B = -2*K*R;
+	MatrixXd B = -K*R/3;
 
+	//std::cout << U << std::endl;
 	igl::min_quad_with_fixed_solve(data, B, bc, MatrixXd(0, 0), U);
+	//std::cout << U << std::endl;
+	//std::flush(std::cout);
 }

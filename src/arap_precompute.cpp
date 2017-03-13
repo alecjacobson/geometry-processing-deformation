@@ -24,12 +24,12 @@ void arap_precompute(
 	MatrixXd C(f, 3);
 	igl::cotmatrix_entries(V, F, C);
 
-	C *= 2;
+	//C *= 2;
 
 	K.resize(n, 3*n);
 	std::vector<Triplet<double>> K_val;
 
-	K_val.reserve(27 * f);
+	K_val.reserve(54 * f);
 
 	for (int face = 0; face < f; ++face)
 	{
@@ -44,7 +44,8 @@ void arap_precompute(
 
 				for (int dim = 0; dim < 3; ++dim)
 				{
-					K_val.push_back({ vk, vk + n * dim, C(face, edge) * (V(vi, dim) - V(vj, dim)) });
+					K_val.push_back({ vi, 3 * vk + dim, C(face, edge) * (V(vi, dim) - V(vj, dim)) });
+					K_val.push_back({ vj, 3 * vk + dim, -C(face, edge) * (V(vi, dim) - V(vj, dim)) });
 					//std::cout << C(face, vtx) * (V(v1, dim) - V(v2, dim)) << std::endl;
 				}
 			}

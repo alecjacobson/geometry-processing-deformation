@@ -3,55 +3,58 @@
 <head>
 	<meta charset="utf-8"/>
 	<link type="text/css" rel="stylesheet" href="shared/css/style.css"/>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({ TeX: { equationNumbers: {autoNumber: "all"} } });
+</script>
 <script type="text/javascript" src="shared/js/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 </head>
 <body>
 
 <div style="display:none">
-<span class="math">\[\newcommand{\mat}[1]{\mathbf{#1}}\]</span>
-<span class="math">\[\newcommand{\vec}[1]{\mathbf{#1}}\]</span>
-<span class="math">\[\newcommand{\A}{\mat{A}}\]</span>
-<span class="math">\[\newcommand{\B}{\mat{B}}\]</span>
-<span class="math">\[\newcommand{\C}{\mat{C}}\]</span>
-<span class="math">\[\newcommand{\D}{\mat{D}}\]</span>
-<span class="math">\[\newcommand{\E}{\mat{E}}\]</span>
-<span class="math">\[\newcommand{\I}{\mat{I}}\]</span>
-<span class="math">\[\newcommand{\G}{\mat{G}}\]</span>
-<span class="math">\[\newcommand{\N}{\mat{N}}\]</span>
-<span class="math">\[\newcommand{\Q}{\mat{Q}}\]</span>
-<span class="math">\[\newcommand{\P}{\mat{P}}\]</span>
-<span class="math">\[\newcommand{\Rot}{\mat{R}}\]</span>
-<span class="math">\[\newcommand{\R}{\mathbb{R}}\]</span>
-<span class="math">\[\newcommand{\One}{\mathbf{1}}\]</span>
-<span class="math">\[\newcommand{\S}{\mathcal{S}}\]</span>
-<span class="math">\[\newcommand{\T}{\mat{T}}\]</span>
-<span class="math">\[\newcommand{\M}{\mat{M}}\]</span>
-<span class="math">\[\newcommand{\K}{\mat{K}}\]</span>
-<span class="math">\[\newcommand{\U}{\mat{U}}\]</span>
-<span class="math">\[\newcommand{\L}{\mat{L}}\]</span>
-<span class="math">\[\newcommand{\V}{\mat{V}}\]</span>
-<span class="math">\[\newcommand{\W}{\mat{W}}\]</span>
-<span class="math">\[\newcommand{\X}{\mat{X}}\]</span>
-<span class="math">\[\newcommand{\Y}{\mat{Y}}\]</span>
-<span class="math">\[\newcommand{\F}{\mat{F}}\]</span>
-<span class="math">\[\newcommand{\c}{\vec{c}}\]</span>
-<span class="math">\[\newcommand{\f}{\vec{f}}\]</span>
-<span class="math">\[\newcommand{\g}{\vec{g}}\]</span>
-<span class="math">\[\newcommand{\n}{\vec{n}}\]</span>
-<span class="math">\[\newcommand{\d}{\vec{d}}\]</span>
-<span class="math">\[\newcommand{\e}{\vec{e}}\]</span>
-<span class="math">\[\newcommand{\p}{\vec{p}}\]</span>
-<span class="math">\[\newcommand{\tr}[1]{\mathop{\text{tr}}{\left(#1\right)}}\]</span>
-<span class="math">\[\newcommand{\t}{\vec{t}}\]</span>
-<span class="math">\[\newcommand{\x}{\vec{x}}\]</span>
-<span class="math">\[\newcommand{\y}{\vec{y}}\]</span>
-<span class="math">\[\newcommand{\u}{\vec{u}}\]</span>
-<span class="math">\[\newcommand{\z}{\vec{z}}\]</span>
-<span class="math">\[\renewcommand{\v}{\vec{v}}\]</span>
-<span class="math">\[\newcommand{\transpose}{{\mathsf T}}\]</span>
-<span class="math">\[\newcommand{\min}{\mathop{\text{min}}}\]</span>
-<span class="math">\[\newcommand{\argmin}{\mathop{\text{argmin}}}\]</span>
-<span class="math">\[\newcommand{\argmax}{\mathop{\text{argmax}}}\]</span>
+<span class="math">\(\newcommand{\A}{\mat{A}}\)</span>
+<span class="math">\(\newcommand{\B}{\mat{B}}\)</span>
+<span class="math">\(\newcommand{\C}{\mat{C}}\)</span>
+<span class="math">\(\newcommand{\D}{\mat{D}}\)</span>
+<span class="math">\(\newcommand{\E}{\mat{E}}\)</span>
+<span class="math">\(\newcommand{\F}{\mat{F}}\)</span>
+<span class="math">\(\newcommand{\G}{\mat{G}}\)</span>
+<span class="math">\(\newcommand{\I}{\mat{I}}\)</span>
+<span class="math">\(\newcommand{\K}{\mat{K}}\)</span>
+<span class="math">\(\newcommand{\L}{\mat{L}}\)</span>
+<span class="math">\(\newcommand{\M}{\mat{M}}\)</span>
+<span class="math">\(\newcommand{\N}{\mat{N}}\)</span>
+<span class="math">\(\newcommand{\One}{\mathbf{1}}\)</span>
+<span class="math">\(\newcommand{\P}{\mat{P}}\)</span>
+<span class="math">\(\newcommand{\Q}{\mat{Q}}\)</span>
+<span class="math">\(\newcommand{\Rot}{\mat{R}}\)</span>
+<span class="math">\(\newcommand{\R}{\mathbb{R}}\)</span>
+<span class="math">\(\newcommand{\S}{\mathcal{S}}\)</span>
+<span class="math">\(\newcommand{\T}{\mat{T}}\)</span>
+<span class="math">\(\newcommand{\U}{\mat{U}}\)</span>
+<span class="math">\(\newcommand{\V}{\mat{V}}\)</span>
+<span class="math">\(\newcommand{\W}{\mat{W}}\)</span>
+<span class="math">\(\newcommand{\X}{\mat{X}}\)</span>
+<span class="math">\(\newcommand{\Y}{\mat{Y}}\)</span>
+<span class="math">\(\newcommand{\argmax}{\mathop{\text{argmax}}}\)</span>
+<span class="math">\(\newcommand{\argmin}{\mathop{\text{argmin}}}\)</span>
+<span class="math">\(\newcommand{\c}{\vec{c}}\)</span>
+<span class="math">\(\newcommand{\d}{\vec{d}}\)</span>
+<span class="math">\(\newcommand{\e}{\vec{e}}\)</span>
+<span class="math">\(\newcommand{\f}{\vec{f}}\)</span>
+<span class="math">\(\newcommand{\g}{\vec{g}}\)</span>
+<span class="math">\(\newcommand{\mat}[1]{\mathbf{#1}}\)</span>
+<span class="math">\(\newcommand{\min}{\mathop{\text{min}}}\)</span>
+<span class="math">\(\newcommand{\n}{\vec{n}}\)</span>
+<span class="math">\(\newcommand{\p}{\vec{p}}\)</span>
+<span class="math">\(\newcommand{\transpose}{{\mathsf T}}\)</span>
+<span class="math">\(\newcommand{\tr}[1]{\mathop{\text{tr}}{\left(#1\right)}}\)</span>
+<span class="math">\(\newcommand{\t}{\vec{t}}\)</span>
+<span class="math">\(\newcommand{\u}{\vec{u}}\)</span>
+<span class="math">\(\newcommand{\vec}[1]{\mathbf{#1}}\)</span>
+<span class="math">\(\newcommand{\x}{\vec{x}}\)</span>
+<span class="math">\(\newcommand{\y}{\vec{y}}\)</span>
+<span class="math">\(\newcommand{\z}{\vec{z}}\)</span>
+<span class="math">\(\renewcommand{\v}{\vec{v}}\)</span>
 </div>
 
 <h1 id="geometryprocessing–deformation">Geometry Processing – Deformation</h1>
@@ -135,7 +138,7 @@ topology (connectivity) of the mesh (<span class="math">\(F\)</span>) will not c
 
 <p>A rest surface <span class="math">\(\hat{S}\)</span>
 <a href="https://en.wikipedia.org/wiki/Immersion_(mathematics)">immersed</a> in <span class="math">\(\R³\)</span> can
-be described as a mapping <span class="math">\(\hat{\x}\)</span> from <em>some</em> 2D parameteric domain <span class="math">\(Ω\)</span>. For any
+be described as a mapping <span class="math">\(\hat{\x}\)</span> from <em>some</em> 2D parametric domain <span class="math">\(Ω\)</span>. For any
 parameters <span class="math">\(u\)</span> and <span class="math">\(v\)</span>, <span class="math">\(\hat{\x}\)</span> describes the 3D position:</p>
 
 <p><span class="math">\[
@@ -171,7 +174,7 @@ constraints:</p>
 <p><span class="math">\[
 \text{ subject to } \x(u_i, v_i) = \g_i \ ∀ i = \{1, … , k\},
 \]</span>
-where <span class="math">\(\g_i\)</span> is the position of the <span class="math">\(i^{th}\)</span> control point handle.</p>
+where <span class="math">\(\g_i\)</span> is the position of the $i$th control point handle.</p>
 
 <p>While the constraints are straightforward, we have many choices for how to
 formulate the energy function <span class="math">\(E\)</span>. A natural choice is to measure distortion in
@@ -555,6 +558,20 @@ c_{ij} ‖ (\v_i-\v_j) - \Rot_k (\hat{\v}_i-\hat{\v}_j)‖²,
 \]</span>
 where <span class="math">\(F(k)\)</span> is the set of all faces incident on the <span class="math">\(k\)</span>-th vertex.</p>
 
+<blockquote>
+<h5 id="wheredorotationslive">Where do rotations <em>live</em>?</h5>
+
+<p>We have assigned a rotation for each vertex: there are <span class="math">\(n\)</span> rotation matrices
+as auxiliary degrees of freedom. This is in contrast to assigning
+rotations per face (as in &#8220;A Local/Global Approach to Mesh Parameterization&#8221;
+[Liu et al. 2008]). Per-face&#8211;or more generally per-element&#8211;rotations work
+well for <a href="https://en.wikipedia.org/wiki/Codimension">codimension</a> zero
+objects (triangle meshes in <span class="math">\(\R²\)</span> or tetrahedral meshes in <span class="math">\(\R³\)</span>). But for
+triangle mesh surfaces in <span class="math">\(\R³\)</span> (i.e., codimension 1), per-face rotations
+would lead to &#8220;crumpling&#8221;) because <em>bending</em> along edges would not be
+measured.</p>
+</blockquote>
+
 <h4 id="optimization">Optimization</h4>
 
 <p>The simplest method for optimizing the ARAP energy is by alternating between</p>
@@ -597,7 +614,7 @@ differences across edges in the rest mesh (e.g., <span class="math">\(\hat{\v}_i
 
 <h5 id="localstep">Local step</h5>
 
-<p>Minimizing this energy with respect to <span class="math">\(\Rot\)</span> corresponds to minimizing:</p>
+<p>Minimizing this energy with respect <span class="math">\(\Rot\)</span> corresponds to minimizing:</p>
 
 <p><span class="math">\[
 \tr{ \underbrace{\V^\transpose \K}_{\C^\transpose} \Rot },
