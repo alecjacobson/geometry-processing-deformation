@@ -12,7 +12,7 @@ void arap_single_iteration(
   // Construct C: C' = V'K
   int n = U.rows();
   Eigen::MatrixXd C(3 * n, 3);
-  C = (U.transpose()* K).transpose();
+  C = (U.transpose() * K).transpose();
   
   // Construct R
   Eigen::MatrixXd R(3 * n, 3);
@@ -25,7 +25,7 @@ void arap_single_iteration(
   
   // Construct B
   Eigen::MatrixXd B(n, 3);
-  B = 0.5 * K * R;
+  B = K * R;
   
   /* Setup inputs to min_quad
    * data = data

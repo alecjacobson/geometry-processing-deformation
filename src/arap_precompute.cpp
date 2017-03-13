@@ -12,7 +12,7 @@ void compute_cot_diff(
   diff_x = V(a, 0) - V(b, 0);
   diff_y = V(a, 1) - V(b, 1);
   diff_z = V(a, 2) - V(b, 2);
-  double val = 0.5 * cot;
+  double val = (1.0/4) * cot;
   
   tripletList.push_back(Eigen::Triplet<double>(a, 3*b, val * diff_x));
   tripletList.push_back(Eigen::Triplet<double>(b, 3*a, val * -diff_x));
