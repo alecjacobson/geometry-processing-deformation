@@ -1,4 +1,6 @@
 #include "arap_precompute.h"
+#include "igl/cotmatrix.h"
+#include <igl/min_quad_with_fixed.h>
 
 void arap_precompute(
   const Eigen::MatrixXd & V,
@@ -7,5 +9,5 @@ void arap_precompute(
   igl::min_quad_with_fixed_data<double> & data,
   Eigen::SparseMatrix<double> & K)
 {
-  // REPLACE WITH YOUR CODE
+  
 }
