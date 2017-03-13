@@ -1,5 +1,6 @@
 #include "arap_single_iteration.h"
 #include <igl/min_quad_with_fixed.h>
+#include <igl/polar_svd3x3.h>
 #include "closest_rotation.h"
 
 void arap_single_iteration(
@@ -17,18 +18,14 @@ void arap_single_iteration(
 	for (int i = 0; i < n; i++) {
 		Eigen::Matrix3d rot;
 		closest_rotation(C.block(3 * i, 0, 3, 3), rot);
+		//igl::polar_svd3x3<Eigen::Matrix3d>(C.block(3 * i, 0, 3, 3), rot);
 		R.block(3 * i, 0, 3, 3) = rot;
-
 		
 	}
 
-	auto B = K*R;
+	auto B = -K*R/3;
 
 	//Finally, just solve for LV = B in each of the three dimensions.
 	
-	for (int i = 0; i < 3; i++) {
-		Eigen::VectorXd u;
-		igl::min_quad_with_fixed_solve(data, B.col(i), bc.col(i), Eigen::MatrixXd(0, 0), u);
-		U.col(i) = u;
-	}
+	igl::min_quad_with_fixed_solve(data, B, bc, Eigen::MatrixXd(0, 0), U);
 }
