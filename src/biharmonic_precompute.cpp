@@ -12,9 +12,6 @@ void biharmonic_precompute(
   const Eigen::VectorXi & b,
   igl::min_quad_with_fixed_data<double> & data)
 {
-  // REPLACE WITH YOUR CODE
-  //data.n = V.rows();
-	
 	SparseMatrix<double> L;
 	cotmatrix(V, F, L);
 
@@ -30,8 +27,8 @@ void biharmonic_precompute(
 
 	SparseMatrix<double> Q = L.transpose() * M_inv * L;
 
-	Eigen::SparseMatrix<double> Aeq;
-	min_quad_with_fixed_data<double> data;
-	min_quad_with_fixed_precompute(Q, b, Aeq, false, data);
+	SparseMatrix<double> Aeq;
+	bool result = min_quad_with_fixed_precompute(Q, b, Aeq, false, data);
+	assert(result);
 }
 
