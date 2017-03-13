@@ -10,7 +10,7 @@ void arap_single_iteration(
   Eigen::MatrixXd & U)
 {
     
-    std::cout << "Input size: " << U.rows() << " " << U.cols() << std::endl;
+    //std::cout << "Input size: " << U.rows() << " " << U.cols() << std::endl;
 
     Eigen::MatrixXd R(3*U.rows(),3);
 
@@ -21,10 +21,10 @@ void arap_single_iteration(
         Eigen::Matrix3d a = C.block(3*i,0,3,3);
         Eigen::Matrix3d r;
         igl::polar_svd3x3<Eigen::Matrix3d>(a,r);
-        R.block(3*i,0,3,3) = r.transpose();
+        R.block(3*i,0,3,3) = r;
     }
 
-    Eigen::MatrixXd KR =   (K * R);
+    Eigen::MatrixXd KR =   -(K * R);
   for(int i = 0; i < 3; ++i) {
       Eigen::VectorXd Y = bc.col(i);
       Eigen::VectorXd B = KR.col(i);
