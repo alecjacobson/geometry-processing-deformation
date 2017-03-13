@@ -2,7 +2,6 @@
 #include <igl/cotmatrix.h>
 #include <igl/cotmatrix_entries.h>
 #include <igl/min_quad_with_fixed.h>
-#include <iostream>
 
 using namespace Eigen;
 
@@ -24,8 +23,6 @@ void arap_precompute(
 	MatrixXd C(f, 3);
 	igl::cotmatrix_entries(V, F, C);
 
-	//C *= 2;
-
 	K.resize(n, 3*n);
 	std::vector<Triplet<double>> K_val;
 
@@ -46,7 +43,6 @@ void arap_precompute(
 				{
 					K_val.push_back({ vi, 3 * vk + dim, C(face, edge) * (V(vi, dim) - V(vj, dim)) });
 					K_val.push_back({ vj, 3 * vk + dim, -C(face, edge) * (V(vi, dim) - V(vj, dim)) });
-					//std::cout << C(face, vtx) * (V(v1, dim) - V(v2, dim)) << std::endl;
 				}
 			}
 		}
