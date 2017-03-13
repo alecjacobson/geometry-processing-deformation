@@ -15,11 +15,6 @@ void biharmonic_solve(
     
     Eigen::VectorXd B = Eigen::VectorXd::Zero(data.n, 1 );
     Eigen::VectorXd Beq, Dx, Dy, Dz; // empty equality constraints
-    igl::min_quad_with_fixed_solve( data, B, bc.col( 0 ), Beq, Dx );
-    igl::min_quad_with_fixed_solve( data, B, bc.col( 1 ), Beq, Dy );
-    igl::min_quad_with_fixed_solve( data, B, bc.col( 2 ), Beq, Dz );
-    D.col( 0 ) = Dx;
-    D.col( 1 ) = Dy;
-    D.col( 2 ) = Dz;
+    igl::min_quad_with_fixed_solve( data, B, bc, Beq, D );
 }
 
