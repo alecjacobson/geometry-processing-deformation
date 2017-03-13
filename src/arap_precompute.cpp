@@ -48,7 +48,5 @@ void arap_precompute(
 		}
 	}
 
-	std::flush(std::cout);
-
 	K.setFromTriplets(K_val.begin(), K_val.end());
 }
