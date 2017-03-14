@@ -138,7 +138,7 @@ topology (connectivity) of the mesh (<span class="math">\(F\)</span>) will not c
 
 <p>A rest surface <span class="math">\(\hat{S}\)</span>
 <a href="https://en.wikipedia.org/wiki/Immersion_(mathematics)">immersed</a> in <span class="math">\(\R³\)</span> can
-be described as a mapping <span class="math">\(\hat{\x}\)</span> from <em>some</em> 2D parameteric domain <span class="math">\(Ω\)</span>. For any
+be described as a mapping <span class="math">\(\hat{\x}\)</span> from <em>some</em> 2D parametric domain <span class="math">\(Ω\)</span>. For any
 parameters <span class="math">\(u\)</span> and <span class="math">\(v\)</span>, <span class="math">\(\hat{\x}\)</span> describes the 3D position:</p>
 
 <p><span class="math">\[
@@ -558,6 +558,20 @@ c_{ij} ‖ (\v_i-\v_j) - \Rot_k (\hat{\v}_i-\hat{\v}_j)‖²,
 \]</span>
 where <span class="math">\(F(k)\)</span> is the set of all faces incident on the <span class="math">\(k\)</span>-th vertex.</p>
 
+<blockquote>
+<h5 id="wheredorotationslive">Where do rotations <em>live</em>?</h5>
+
+<p>We have assigned a rotation for each vertex: there are <span class="math">\(n\)</span> rotation matrices
+as auxiliary degrees of freedom. This is in contrast to assigning
+rotations per face (as in &#8220;A Local/Global Approach to Mesh Parameterization&#8221;
+[Liu et al. 2008]). Per-face&#8211;or more generally per-element&#8211;rotations work
+well for <a href="https://en.wikipedia.org/wiki/Codimension">codimension</a> zero
+objects (triangle meshes in <span class="math">\(\R²\)</span> or tetrahedral meshes in <span class="math">\(\R³\)</span>). But for
+triangle mesh surfaces in <span class="math">\(\R³\)</span> (i.e., codimension 1), per-face rotations
+would lead to &#8220;crumpling&#8221;) because <em>bending</em> along edges would not be
+measured.</p>
+</blockquote>
+
 <h4 id="optimization">Optimization</h4>
 
 <p>The simplest method for optimizing the ARAP energy is by alternating between</p>
@@ -598,9 +612,86 @@ where <span class="math">\(\L ∈ \R^{n × n}\)</span> is the familiar cotangent
 <span class="math">\(\K ∈ \R^{n × 3n}\)</span> sparse matrix containing cotangents multiplied against
 differences across edges in the rest mesh (e.g., <span class="math">\(\hat{\v}_i - \hat{\v}_j\)</span>).</p>
 
+<blockquote>
+<h6 id="imsoconfused.whatsinthekmatrix">I&#8217;m so confused. What&#8217;s in the <span class="math">\(\K\)</span> matrix?</h6>
+
+<p>Let&#8217;s take it slow. The <span class="math">\(\K\)</span> matrix is represents the
+<a href="https://en.wikipedia.org/wiki/Bilinear_form">bilinear form</a> that combines unknown
+vertex positions and unknown rotations. We have identified above that we can
+write this in summation or matrix form:
+<span class="math">\[
+⅙ ∑\limits_{k=1}^n ∑\limits_{ ij ∈ F(k)}  c_{ij} (\v_i-\v_j)^\transpose \Rot_k (\hat{\v}_i-\hat{\v}_j)
+= \tr{ \V^\transpose \K \Rot },
+\]</span>
+but how did we get here?</p>
+
+<p>Let&#8217;s start with the summation form. The <em>constants</em> of this formula are the
+<span class="math">\(c_{ij}\)</span> terms and the <span class="math">\((\hat{\v}_i-\hat{\v}_j)\)</span> terms. Since these always
+appear together, let us merge them into weighted edge difference vectors
+<span class="math">\(c_{ij} (\hat{\v}_i-\hat{\v}_j) =: \hat{\e}_{ij} ∈ \R³\)</span>:</p>
+
+<p><span class="math">\[
+⅙ ∑\limits_{k=1}^n ∑\limits_{ ij ∈ F(k)}  \underbrace{(\v_i-\v_j)^\transpose
+\Rot_k \hat{\e}_{ij}}_{∈\R},
+\]</span>
+the inner term in the summation is an <a href="https://en.wikipedia.org/wiki/Inner_product_space">inner
+product</a>; that is, a
+<a href="https://en.wikipedia.org/wiki/Scalar_(mathematics)">scalar</a>. Let&#8217;s expose this
+by expanding the matrix-vector products of the inner-product:
+<span class="math">\[
+⅙ ∑\limits_{k=1}^n ∑\limits_{ ij ∈ F(k)} ∑\limits_{α=1}^3 ∑\limits_{β=1}^3
+  (v_i^α - v_j^α)R_k^{αβ}\hat{e}_{ij}^β.
+\]</span></p>
+
+<p>If our mesh is stored as a vertex list and face list, it&#8217;s not easy/efficient
+to loop over per-vertex rotations (outer sum) and then over all half-edges of
+incident faces (second sum). Instead, let&#8217;s rearrange these sums to loop over
+all faces first, then the half-edges of that face, and then over all
+per-vertex rotations that involve this half-edge:
+<span class="math">\[
+⅙ ∑\limits_{f=1}^m ∑\limits_{ ij ∈ E(f)} \quad  ∑\limits_{k | ij ∈F(k)} \quad ∑\limits_{α=1}^3 ∑\limits_{β=1}^3
+  (v_i^α - v_j^α)R_k^{αβ}\hat{e}_{ij}^β,
+\]</span>
+where the third sum is over all rotations <span class="math">\(k\)</span> such that the half-edge <span class="math">\(ij\)</span>
+belongs to the half-edges of the faces incident on the <span class="math">\(k\)</span>-th vertex: <span class="math">\(k | ij
+∈F(k)\)</span>. Well, this means <span class="math">\(k\)</span> can either be <span class="math">\(i\)</span> or <span class="math">\(j\)</span> or the third vertex of
+the <span class="math">\(f\)</span>-th face.</p>
+
+<p>Now let&#8217;s turn our attention back to the
+<a href="https://en.wiktionary.org/wiki/summand">summand</a>. The terms indexed by <span class="math">\(α\)</span>
+never <em>mix</em>. That is, we never add/multiply <span class="math">\(v_i^α\)</span>, <span class="math">\(v_j^γ\)</span>, and <span class="math">\(R_k^{δβ}\)</span>
+unless <span class="math">\(α=γ=δ\)</span>. This implies that we can write this summation in matrix form
+as:
+<span class="math">\[
+\V₁^\transpose \K₁ \Rot₁ +  
+\V₂^\transpose \K₂ \Rot₂ +  
+\V₃^\transpose \K₃ \Rot₃,
+\]</span>
+where <span class="math">\(\V_α ∈ \R^n\)</span> is <span class="math">\(α\)</span>-th column of <span class="math">\(\V\)</span>, <span class="math">\(\Rot_α ∈ \R^{3n}\)</span> is the <span class="math">\(α\)</span>-th column of
+<span class="math">\(\Rot\)</span> and <span class="math">\(\K₁,\K₂,\K₃ ∈ \R^{n × 3n}\)</span> are sparse matrices.</p>
+
+<p><em>Further</em>, the constant term <span class="math">\(\hat{e}^β_{ij}\)</span> in the summation acts the same on
+<span class="math">\((v_i^α - v_j^α)R_k^{αβ}\)</span> for any <span class="math">\(α\)</span> value. This implies that <span class="math">\(\K₁=\K₂=\K₃\)</span>,
+so we can reduce the matrix form to:
+<span class="math">\[
+\tr{\V \K \Rot}.
+\]</span></p>
+
+<p>Finally, we can answer what is in each entry <span class="math">\(K_{vw}\)</span>, where <span class="math">\(v\)</span> chooses the
+row and <span class="math">\(w=3k+β\)</span> chooses the column of <span class="math">\(\K\)</span>. Treating our nested summation as
+nested for-loops, we can increment entries in <span class="math">\(\K\)</span>
+<span class="math">\[
+\begin{align}
+K_{i\ 3k+β} & \mathrel{+}= \hat{e}_{ij}^β, \\
+K_{j\ 3k+β} & \mathrel{+}= -\hat{e}_{ij}^β, \\
+\end{align}
+\]</span>
+for each half-edge encountered. </p>
+</blockquote>
+
 <h5 id="localstep">Local step</h5>
 
-<p>Minimizing this energy with respect <span class="math">\(\R\)</span> corresponds to minimizing:</p>
+<p>Minimizing this energy with respect <span class="math">\(\Rot\)</span> corresponds to minimizing:</p>
 
 <p><span class="math">\[
 \tr{ \underbrace{\V^\transpose \K}_{\C^\transpose} \Rot },
@@ -701,7 +792,7 @@ indices <code>b</code> into <code>V</code>. The output should be a prefacorized 
 <p>Precompute data needed to efficiently conduct local-global iterations for an
 arap deformation. This includes the <code>data</code> struct employed by
 <code>igl::min_quad_with_fixed</code> to solve the global step&quot; and constructing the
-bi-linear form <code>K</code> that mixes rotation degrees of freedom with unknown
+bilinear form <code>K</code> that mixes rotation degrees of freedom with unknown
 positions for preparing the covariance matrices of the local step and the
 linear term of the global step.</p>
 
