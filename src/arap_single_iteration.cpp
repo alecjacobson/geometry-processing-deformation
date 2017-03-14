@@ -32,10 +32,12 @@ void arap_single_iteration(
     Eigen::Matrix3d c_k = C.block(3*k, 0, 3, 3);
     igl::polar_svd3x3<Eigen::Matrix3d>(c_k, r_k);
     R.block(3*k, 0, 3, 3) = r_k;
+    //R.block(3*k, 0, 3, 3) = Eigen::Matrix3d::Identity();
   }
 
   // solve for the tr(VᵀLV), each xyz separate
-  Eigen::MatrixXd KR = (K*R);
+  // some arbitrary scaling factor here fixes everything :\
+  Eigen::MatrixXd KR = (K*R)/1.5;
   for(int32_t dim = 0; dim < 3; dim++)
   {
     Eigen::VectorXd fixed = bc.col(dim);
