@@ -28,6 +28,7 @@ void biharmonic_precompute(
 	SparseMatrix<double> Q = L.transpose() * M_inv * L;
 
 	SparseMatrix<double> Aeq;
+	Q = 2 * Q;
 	bool result = min_quad_with_fixed_precompute(Q, b, Aeq, false, data);
 	assert(result);
 }
