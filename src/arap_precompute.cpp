@@ -22,7 +22,7 @@ void arap_precompute(
 
     Eigen::MatrixXd C(F.rows(), 3);
     igl::cotmatrix_entries(V, F, C);
-
+    C = (1./3.)*C; // 1/2 cotmatrix entries...need 1/6...
     K.resize(n, 3 * n);
 
     std::vector< Eigen::Triplet<double> > trips;
