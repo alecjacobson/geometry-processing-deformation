@@ -16,13 +16,14 @@ void arap_precompute(
     igl::min_quad_with_fixed_data<double> & data,
     Eigen::SparseMatrix<double> & K)
 {
-    // REPLACE WITH YOUR CODE                                                                                         
     const int n = V.rows();
     // columns are edges for tri-row 0,1,2 --> edges in C [1,2],[2,0],[0,1]
 
     Eigen::MatrixXd C(F.rows(), 3);
     igl::cotmatrix_entries(V, F, C);
+
     C = (1./3.)*C; // 1/2 cotmatrix entries...need 1/6...
+
     K.resize(n, 3 * n);
 
     std::vector< Eigen::Triplet<double> > trips;
@@ -54,10 +55,6 @@ void arap_precompute(
 
     K.setFromTriplets( trips.begin(), trips.end() );
 
-    //Eigen::MatrixXd R(3 * n, 3);
-    //Eigen::MatrixXd Ct(3 * n, 3);
-    //Ct = V.transpose() * K;
-
     // now prep for the global step
     Eigen::SparseMatrix<double> L(n, n);
     igl::cotmatrix(V, F, L);
@@ -65,4 +62,3 @@ void arap_precompute(
     Eigen::SparseMatrix<double> Aeq;
     igl::min_quad_with_fixed_precompute(L, b, Aeq, false, data);
 }
-
