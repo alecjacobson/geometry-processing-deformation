@@ -10,7 +10,7 @@ void biharmonic_precompute(
   igl::min_quad_with_fixed_data<double> & data)
 {
   // REPLACE WITH YOUR CODE
-  //data.n = V.rows();
+  data.n = V.rows();
 
   // Get Laplacian
  Eigen::SparseMatrix<double> L;
