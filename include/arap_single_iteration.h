@@ -2,7 +2,9 @@
 #define ARAP_SINGLE_ITERATION_H
 #include <Eigen/Core>
 #include <Eigen/Sparse>
-
+#include "arap_precompute.h"
+#include "igl/polar_svd3x3.h"
+#include <iostream>
 namespace igl
 {
   template <typename T> struct min_quad_with_fixed_data;
