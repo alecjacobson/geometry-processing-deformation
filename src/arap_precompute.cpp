@@ -21,6 +21,7 @@ void arap_precompute(
 
   //Precompute K
   K.resize(V.rows(), 3 * V.rows()); // n x 3n
+  K.setZero();
   typedef Eigen::Triplet< double > Triplet;
   std::vector< Triplet > triplets;
 
@@ -36,13 +37,20 @@ void arap_precompute(
       j = F(f_idx, (2 + edge) % 3);
       k = F(f_idx, (0 + edge) % 3);
 
-      Eigen::Vector3d v_i_minus_j = V.row(i) - V.row(j);
       // loop over beta
+      Eigen::Vector3d v_i_minus_j = V.row(i) - V.row(j);
       for(int beta = 0; beta < 3; beta++){
         triplets.push_back(Triplet(i, 3*k + beta,  v_i_minus_j[beta] * C(f_idx,edge)));
         triplets.push_back(Triplet(j, 3*k + beta, -v_i_minus_j[beta] * C(f_idx,edge)));
+
+        triplets.push_back(Triplet(i, 3*i + beta,  v_i_minus_j[beta] * C(f_idx,edge)));
+        triplets.push_back(Triplet(j, 3*i + beta, -v_i_minus_j[beta] * C(f_idx,edge)));
+
+        triplets.push_back(Triplet(i, 3*j + beta,  v_i_minus_j[beta] * C(f_idx,edge)));
+        triplets.push_back(Triplet(j, 3*j + beta, -v_i_minus_j[beta] * C(f_idx,edge)));
       }
     }
   }
   K.setFromTriplets(triplets.begin(), triplets.end());
+  K /= 3.0;
 }

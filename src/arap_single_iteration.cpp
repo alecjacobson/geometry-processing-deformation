@@ -11,11 +11,12 @@ void arap_single_iteration(
   // Get C - 3n x 3
   Eigen::MatrixXd C = K.transpose() * U;
 
-  // Create for R
+  // Create R
   Eigen::MatrixXd R(C.rows(), C.cols());
   for(int k = 0; k < K.cols(); k+=3){
     // Solve for R_k
     Eigen::Matrix3d C_k = C.block(k,0, 3,3);
+    C_k.normalize();
     Eigen::Matrix3d R_k;
     igl::polar_svd3x3(C_k, R_k);
     R.block(k,0, 3,3) = R_k;
