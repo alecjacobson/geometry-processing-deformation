@@ -57,5 +57,4 @@ void arap_precompute(
 	}
 
 	K.setFromTriplets(tripletList.begin(), tripletList.end());
-	//K = V.transpose() * K;
 }

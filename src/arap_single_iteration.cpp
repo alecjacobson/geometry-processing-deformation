@@ -1,7 +1,7 @@
 #include "arap_single_iteration.h"
 #include <igl/min_quad_with_fixed.h>
 #include <igl/polar_svd3x3.h>
-#include <Eigen/Dense>
+#include <iostream>
 
 void arap_single_iteration(
   const igl::min_quad_with_fixed_data<double> & data,
@@ -9,18 +9,22 @@ void arap_single_iteration(
   const Eigen::MatrixXd & bc,
   Eigen::MatrixXd & U)
 {
-  Eigen::MatrixXd C = K; //bc.transpose() * K;
+  Eigen::MatrixXd C = U.transpose() * K;
 
-  Eigen::JacobiSVD<Eigen::MatrixXd> svd(C, Eigen::ComputeFullU | Eigen::ComputeFullV);
-  Eigen::Matrix3d v = svd.matrixV();
-  Eigen::Matrix3d u = svd.matrixU();
-  Eigen::Matrix3d omega;
-  Eigen::Matrix3d UVt = u * v.transpose();
-  omega << 1, 0, 0,
-		0, 1, 0,
-		0, 0, UVt.determinant();
-	
-  Eigen::MatrixXd R = u * omega * v.transpose();
+  Eigen::MatrixXd R;
+  Eigen::Matrix3d R_k;
+  std::cout << U.rows() << " " << U.cols() << std::endl;
+  for (int i = 0; i < U.rows(); i+=3)
+  {
+	  Eigen::Matrix3d C_k;
+	  C_k.row(0) = C.row(i);
+	  C_k.row(1) = C.row(i+1);
+	  C_k.row(2) = C.row(i+2);
+	  igl::polar_svd3x3(C_k, R_k);
+	  R.row(i) = R_k.row(0);
+	  R.row(i+1) = R_k.row(1);
+	  R.row(i+2) = R_k.row(2);
+  }
 
   Eigen::VectorXd Beq;
   Eigen::VectorXd B = K*R;
