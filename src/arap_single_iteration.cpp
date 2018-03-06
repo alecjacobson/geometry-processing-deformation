@@ -21,6 +21,6 @@ void arap_single_iteration(
   
   //Global step
   Eigen::MatrixXd dummy2(0,0); //dummy for placeholding
-  Eigen::MatrixXd B = K * R;
+  Eigen::MatrixXd B = K * R /3;
   igl::min_quad_with_fixed_solve(data, B, bc, dummy2, U);
 }
