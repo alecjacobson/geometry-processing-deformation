@@ -8,13 +8,20 @@ void arap_single_iteration(
   const Eigen::MatrixXd & bc,
   Eigen::MatrixXd & U)
 {
-  // Get C
-  Eigen::Matrix3d C = U.transpose() * K;
-  // Solve for R
-  Eigen::Matrix3d R;
-  igl::polar_svd3x3(C, R);
+  // Get C - 3n x 3
+  Eigen::MatrixXd C = K.transpose() * U;
+
+  // Create for R
+  Eigen::MatrixXd R(C.rows(), C.cols());
+  for(int k = 0; k < K.cols(); k+=3){
+    // Solve for R_k
+    Eigen::Matrix3d C_k = C.block(k,0, 3,3);
+    Eigen::Matrix3d R_k;
+    igl::polar_svd3x3(C_k, R_k);
+    R.block(k,0, 3,3) = R_k;
+  }
   // Linear term
-  Eigen::VectorXd B = K * R;
+  Eigen::MatrixXd B = K * R;
   // Empty constraints
   Eigen::VectorXd Beq;
   // Minimize energey trace( 0.5*U'*L*U + U'*B + constant )

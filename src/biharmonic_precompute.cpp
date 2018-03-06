@@ -34,6 +34,6 @@ void biharmonic_precompute(
  // Empty constraints
  Eigen::SparseMatrix<double> Aeq;
 
- // Minimize energey trace( 0.5*D'*Q*D + U'*B + constant )
+ // Minimize energey trace( 0.5*D'*Q*D + D'*B + constant )
  igl::min_quad_with_fixed_precompute(Q_sparse, b, Aeq, false, data);
 }
