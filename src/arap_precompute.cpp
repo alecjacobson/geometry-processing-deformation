@@ -2,6 +2,8 @@
 #include <igl/cotmatrix.h>
 #include <igl/cotmatrix_entries.h>
 #include <igl/min_quad_with_fixed.h>
+#include <iostream>
+
 
 void arap_precompute(
   const Eigen::MatrixXd & V,
@@ -25,10 +27,10 @@ void arap_precompute(
   		Eigen::RowVector3d edge = V.row(F(f, edge_num % 3)) - V.row(F(f, (edge_num + 1) % 3));
   		for (int k = 0; k < 3; k++) { // each vertex
   			for (int beta = 0; beta < 3; beta++) { // xyz
-  				K.coeffRef(F(f, edge_num % 3), 3 * F(f, k) + beta) += C(f, k) * edge(beta);
-  				K.coeffRef(F(f, (edge_num + 1) % 3), 3 * F(f, k) + beta) -= C(f, k) * edge(beta);
+  				K.coeffRef(F(f, edge_num % 3), 3 * F(f, k) + beta) += C(f, (edge_num+2)%3) * edge(beta);
+  				K.coeffRef(F(f, (edge_num + 1) % 3), 3 * F(f, k) + beta) -= C(f, (edge_num+2)%3) * edge(beta);
   			}
   		}
-	}
+	  }
   }
 }

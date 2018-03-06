@@ -2,31 +2,25 @@
 #include <igl/min_quad_with_fixed.h>
 #include <Eigen/SVD>
 #include <Eigen/Dense>
+#include <iostream>
 
 void arap_single_iteration(
   const igl::min_quad_with_fixed_data<double> & data,
   const Eigen::SparseMatrix<double> & K,
   const Eigen::MatrixXd & bc,
   Eigen::MatrixXd & U)
-{
+{	
 	Eigen::MatrixXd C = U.transpose() * K;
-	Eigen::MatrixXd R = Eigen::MatrixXd::Zero(3, 3 * U.cols());
-	for (int i = 0; i < U.cols(); i++) {
+	C.transposeInPlace();
+	Eigen::MatrixXd R = Eigen::MatrixXd::Zero(3 * U.rows(), 3);
+	for (int i = 0; i < U.rows(); i++) {
 		Eigen::MatrixXd c = C.block(3*i, 0, 3, 3);
 		Eigen::MatrixXd r;
 		closest_rotation(c, r);
 		R.block(3*i, 0, 3, 3) = r;
 	}
-	Eigen::MatrixXd B = K * R;
-	Eigen::MatrixXd Ux;
-	Eigen::MatrixXd Uy;
-	Eigen::MatrixXd Uz;
-	min_quad_with_fixed_solve(data,B,bc.col(0),Eigen::MatrixXd(), Ux);
-	min_quad_with_fixed_solve(data,B,bc.col(1),Eigen::MatrixXd(), Uy);
-	min_quad_with_fixed_solve(data,B,bc.col(2),Eigen::MatrixXd(), Uz);
-	U.col(0) = Ux;
-	U.col(1) = Uy;
-	U.col(2) = Uz;
+	Eigen::MatrixXd B = K * R / 3;
+	min_quad_with_fixed_solve(data,B,bc,Eigen::MatrixXd(), U);
 }
 
 void closest_rotation(
