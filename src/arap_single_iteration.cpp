@@ -14,7 +14,7 @@ void arap_single_iteration(
 
   Eigen::MatrixXd R(3*data.n, 3);
 
-  for (int i = 0; i < U.rows(); i+=3)
+  for (int i = 0; i < 3*data.n; i+=3)
   {
 	  Eigen::Matrix3d C_k;
 	  Eigen::Matrix3d R_k;
