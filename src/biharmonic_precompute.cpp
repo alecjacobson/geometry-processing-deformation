@@ -5,6 +5,8 @@
 
 #include <igl/doublearea.h>
 #include <igl/edge_lengths.h>
+
+//Calculate the invserse of a mass matrix
 void inverse_massmatrix(
   const Eigen::MatrixXd & V,
   const Eigen::MatrixXi & F,

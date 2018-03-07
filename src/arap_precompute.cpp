@@ -17,18 +17,18 @@ void arap_precompute(
   Eigen::MatrixXd e;
   igl::cotmatrix_entries(V,F,e);
   //[1, 2] [2, 0] [0, 1]
-  //std::cout << "Here" << std::endl;
-  //std::cout << e.cols() << e.rows() << std::endl;
   for (int row = 0; row < F.rows(); row++){
   	//iterate through each edge
   	for (int col = 0; col < F.cols(); col++){
   		int i = F(row, col);
   		int j = F(row, (col+1)%F.cols());
+      //all possible k value
   		int k_p[3];
       k_p[0] = i;
       k_p[1] = j;
       k_p[2] = F(row, (col+2)%F.cols());
-      //std::cout << "1" << std::endl;
+
+      //get the e_ij
   		Eigen::MatrixXd e_ij = e(row, (col+2)%F.cols()) * (V.row(i) - V.row(j)).transpose();
 		
   		for (int k_i = 0; k_i < 3; k_i++)
@@ -40,10 +40,9 @@ void arap_precompute(
 	  		}
 	  	}
   	}
-    //std::cout << "2" << std::endl;
   	
   }
-  //std::cout << "Here" << std::endl;
+  K = K /3; //divided by 3 because we have 1/2 before the tr(V^TKR).
   Eigen::SparseMatrix<double> L;
   igl::cotmatrix(V, F, L);
   Eigen::SparseMatrix<double> dummy(0,0);
