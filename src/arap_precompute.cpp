@@ -17,15 +17,9 @@ void arap_precompute(
 	Eigen::SparseMatrix<double> L(n, n);
 	igl::cotmatrix(V, F, L);
 
-	/*
-	Eigen::SparseMatrix<double> M(n, n);
-	igl::massmatrix(V, F, igl::MASSMATRIX_TYPE_BARYCENTRIC, M);
-
-	Eigen::SparseMatrix<double> Q = L.transpose() * M.cwiseInverse() * L;
-	*/
-
 	Eigen::SparseMatrix<double> Aeq;
 
+	L = L.transpose();
 	igl::min_quad_with_fixed_precompute(L, b, Aeq, false, data);
 
 	typedef Eigen::Triplet<double> T;
@@ -50,8 +44,8 @@ void arap_precompute(
 			Eigen::Vector3d e_ij = L.coeff(i,j)*(v_i-v_j);
 			for (int beta = 0; beta < 3; beta++)
 			{
-				tripletList.push_back(T(i, 3*k + beta, e_ij(beta)));
-				tripletList.push_back(T(j, 3*k + beta, -e_ij(beta)));
+				tripletList.push_back(T(i, 3*k + beta, e_ij(beta)/2));
+				tripletList.push_back(T(j, 3*k + beta, -e_ij(beta)/2));
 			}
 		}
 	}
