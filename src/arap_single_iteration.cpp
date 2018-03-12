@@ -15,6 +15,7 @@ void arap_single_iteration(
   for(int k = 0; k < data.n; k++) {
   	Eigen::Matrix3d C_k = C.block(k * 3, 0, 3, 3);
   	Eigen::Matrix3d R_k;
+  	C_k.normalize();
   	igl::polar_svd3x3(C_k, R_k);
   	R.block(k * 3, 0, 3, 3) = R_k;
   }
