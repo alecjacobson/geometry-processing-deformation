@@ -3,8 +3,6 @@
 #include <igl/massmatrix.h>
 #include <igl/cotmatrix.h>
 #include <igl/invert_diag.h>
-#include <iostream>
-using namespace std;
 
 void arap_precompute(
   const Eigen::MatrixXd & V,
@@ -13,8 +11,11 @@ void arap_precompute(
   igl::min_quad_with_fixed_data<double> & data,
   Eigen::SparseMatrix<double> & K)
 {
+    //Compute number of vertices and faces
     int numV = F.maxCoeff() + 1;
     int numF = F.rows();
+    
+    //Triplet list for computing K
     typedef Eigen::Triplet<double> T;
     std::vector<T> tripletList;
     //tripletList.reserve(F.rows()*54);
@@ -29,45 +30,31 @@ void arap_precompute(
     vals(2,0) = 2;
     vals(2,1) = 0;
 
-    Eigen::VectorXi newB;
+    //Cotangent matrix
     Eigen::SparseMatrix<double> L;
     
+    //Placeholder matrix
     Eigen::SparseMatrix<double> Aeq;
     
     L.resize(numV,numV);
     K.resize(numV,3*numV);
+    
+    //Compute cotangent matrix
     igl::cotmatrix(V,F,L);
     L = L /6.0;
-    //Aeq.resize(1,numV);
-    //cout << "hi" << endl;
+
+    //Precompute the data, L is not positive-semidefinite
     min_quad_with_fixed_precompute(L,b,Aeq,false,data);
-    //cout << "hi" << endl;
     
-    /*Eigen::SparseMatrix<double> Q, L, M, M_inv;
-    
-    Eigen::SparseMatrix<double> Aeq;
-    
-    L.resize(numV,numV);
-    M.resize(numV,numV);
-    M_inv.resize(numV,numV);
-    Q.resize(numV,numV);
-    
-    igl::cotmatrix(V,F,L);
-    igl::massmatrix(V,F,igl::MASSMATRIX_TYPE_VORONOI,M);
-    igl::invert_diag(M,M_inv);
-    
-    Q = L * -1.0; //L.transpose() * M_inv * L;
-    Aeq.resize(1,numV);
-    cout << "hi" << endl;
-    min_quad_with_fixed_precompute(Q,b,Aeq,1,data);
-     cout << "hi" << endl; */
     //Need to compute K now
     for (int fNo = 0; fNo < numF; fNo ++) {
         for (int eNo = 0; eNo < 3; eNo ++) {
             Eigen::Vector3d edgeDiff;
+            //compute e_ij as in README
             edgeDiff.array() = V.row(F(fNo,vals(eNo,1))).array() - V.row(F(fNo,vals(eNo,0))).array();
             edgeDiff.array() = edgeDiff.array() * L.coeffRef(F(fNo,vals(eNo,1)),F(fNo,vals(eNo,0)));
             
+            //Adds to triplet list
             for (int k = 0; k < 3; k ++) {
                 for (int beta = 0; beta < 3; beta ++) {
                     tripletList.push_back(T(F(fNo,vals(eNo,1)),3*F(fNo,k) + beta, edgeDiff(beta) ));
@@ -77,5 +64,7 @@ void arap_precompute(
             }
         }
     }
+    
+    //Create sparse matrix
     K.setFromTriplets(tripletList.begin(), tripletList.end());
 }
