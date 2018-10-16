@@ -4,7 +4,7 @@
 #include "arap_single_iteration.h"
 #include <igl/min_quad_with_fixed.h>
 #include <igl/read_triangle_mesh.h>
-#include <igl/viewer/Viewer.h>
+#include <igl/opengl/glfw/Viewer.h>
 #include <igl/project.h>
 #include <igl/unproject.h>
 #include <igl/snap_points.h>
@@ -61,7 +61,7 @@ int main(int argc, char *argv[])
   igl::read_triangle_mesh(
     (argc>1?argv[1]:"../shared/data/decimated-knight.off"),V,F);
   U = V;
-  igl::viewer::Viewer viewer;
+  igl::opengl::glfw::Viewer viewer;
   std::cout<<R"(
 [click]  To place new control point
 [drag]   To move control point
@@ -88,9 +88,9 @@ R,r      Reset control points
     const Eigen::RowVector3d green(0.2,0.6,0.3);
     if(s.placing_handles)
     {
-      viewer.data.set_vertices(V);
-      viewer.data.set_colors(blue);
-      viewer.data.set_points(s.CV,orange);
+      viewer.data().set_vertices(V);
+      viewer.data().set_colors(blue);
+      viewer.data().set_points(s.CV,orange);
     }else
     {
       // SOLVE FOR DEFORMATION
@@ -110,14 +110,14 @@ R,r      Reset control points
           break;
         }
       }
-      viewer.data.set_vertices(U);
-      viewer.data.set_colors(method==BIHARMONIC?orange:yellow);
-      viewer.data.set_points(s.CU,method==BIHARMONIC?blue:green);
+      viewer.data().set_vertices(U);
+      viewer.data().set_colors(method==BIHARMONIC?orange:yellow);
+      viewer.data().set_points(s.CU,method==BIHARMONIC?blue:green);
     }
-    viewer.data.compute_normals();
+    viewer.data().compute_normals();
   };
   viewer.callback_mouse_down = 
-    [&](igl::viewer::Viewer&, int, int)->bool
+    [&](igl::opengl::glfw::Viewer&, int, int)->bool
   {
     last_mouse = Eigen::RowVector3f(
       viewer.current_mouse_x,viewer.core.viewport(3)-viewer.current_mouse_y,0);
@@ -128,7 +128,7 @@ R,r      Reset control points
       Eigen::Vector3f bary;
       if(igl::unproject_onto_mesh(
         last_mouse.head(2),
-        viewer.core.view * viewer.core.model,
+        viewer.core.view,
         viewer.core.proj, 
         viewer.core.viewport, 
         V, F, 
@@ -153,7 +153,7 @@ R,r      Reset control points
       Eigen::MatrixXf CP;
       igl::project(
         Eigen::MatrixXf(s.CU.cast<float>()),
-        viewer.core.view * viewer.core.model, 
+        viewer.core.view,
         viewer.core.proj, viewer.core.viewport, CP);
       Eigen::VectorXf D = (CP.rowwise()-last_mouse).rowwise().norm();
       sel = (D.minCoeff(&sel) < 30)?sel:-1;
@@ -168,7 +168,7 @@ R,r      Reset control points
     return false;
   };
 
-  viewer.callback_mouse_move = [&](igl::viewer::Viewer &, int,int)->bool
+  viewer.callback_mouse_move = [&](igl::opengl::glfw::Viewer &, int,int)->bool
   {
     if(sel!=-1)
     {
@@ -179,13 +179,13 @@ R,r      Reset control points
       Eigen::RowVector3f drag_scene,last_scene;
       igl::unproject(
         drag_mouse,
-        viewer.core.view*viewer.core.model,
+        viewer.core.view,
         viewer.core.proj,
         viewer.core.viewport,
         drag_scene);
       igl::unproject(
         last_mouse,
-        viewer.core.view*viewer.core.model,
+        viewer.core.view,
         viewer.core.proj,
         viewer.core.viewport,
         last_scene);
@@ -196,13 +196,13 @@ R,r      Reset control points
     }
     return false;
   };
-  viewer.callback_mouse_up = [&](igl::viewer::Viewer&, int, int)->bool
+  viewer.callback_mouse_up = [&](igl::opengl::glfw::Viewer&, int, int)->bool
   {
     sel = -1;
     return false;
   };
   viewer.callback_key_pressed = 
-    [&](igl::viewer::Viewer &, unsigned int key, int mod)
+    [&](igl::opengl::glfw::Viewer &, unsigned int key, int mod)
   {
     switch(key)
     {
@@ -248,7 +248,7 @@ R,r      Reset control points
 
   // Special callback for handling undo
   viewer.callback_key_down = 
-    [&](igl::viewer::Viewer &, unsigned char key, int mod)->bool
+    [&](igl::opengl::glfw::Viewer &, unsigned char key, int mod)->bool
   {
     if(key == 'Z' && (mod & GLFW_MOD_SUPER))
     {
@@ -259,7 +259,7 @@ R,r      Reset control points
     return false;
   };
   viewer.callback_pre_draw = 
-    [&](igl::viewer::Viewer &)->bool
+    [&](igl::opengl::glfw::Viewer &)->bool
   {
     if(viewer.core.is_animating && !s.placing_handles && method == ARAP)
     {
@@ -268,10 +268,10 @@ R,r      Reset control points
     }
     return false;
   };
-  viewer.data.set_mesh(V,F);
-  viewer.core.show_lines = false;
+  viewer.data().set_mesh(V,F);
+  viewer.data().show_lines = false;
   viewer.core.is_animating = true;
-  viewer.data.face_based = true;
+  viewer.data().face_based = true;
   update();
   viewer.launch();
   return EXIT_SUCCESS;
