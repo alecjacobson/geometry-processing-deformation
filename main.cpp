@@ -79,19 +79,6 @@ R,r      Reset control points
     NUM_METHODS = 2,
   } method = BIHARMONIC;
 
-  // Eigen::MatrixXd D;
-  // Eigen::VectorXi b(3);
-  // b << 1,2,3;
-  // Eigen::MatrixXd bc(3,3);
-  // bc << 0.1, 0.2, 0.3,
-  //       0.1, 0.2, 0.1,
-  //       0.2, 0.1, 0.2;
-  // arap_precompute(V, F, b, arap_data, arap_K);
-
-  // biharmonic_precompute(V, F, b, biharmonic_data);
-  // biharmonic_solve(biharmonic_data, bc, D);
-
-
   const auto & update = [&]()
   {
     // predefined colors
