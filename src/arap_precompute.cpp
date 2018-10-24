@@ -1,5 +1,4 @@
 #include "arap_precompute.h"
-#include <igl/all_edges.h>
 #include <igl/min_quad_with_fixed.h>
 #include <igl/cotmatrix.h>
 
