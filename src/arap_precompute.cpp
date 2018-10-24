@@ -10,13 +10,11 @@ void arap_precompute(
   igl::min_quad_with_fixed_data<double> & data,
   Eigen::SparseMatrix<double> & K)
 {
-  // REPLACE WITH YOUR CODE
-
   // Construct Laplacian Matrix
   Eigen::SparseMatrix<double> L;
   igl::cotmatrix(V, F, L);
 
-  // Compute the matrix K 
+  // Compute the matrix K to mix L and displacements
   typedef Eigen::Triplet<double> T;
   std::vector<T> triplets;
   triplets.reserve(27 * V.rows());

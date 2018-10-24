@@ -10,8 +10,6 @@ void biharmonic_precompute(
   const Eigen::VectorXi & b,
   igl::min_quad_with_fixed_data<double> & data)
 {
-  // REPLACE WITH YOUR CODE
-
   // Construct mass and Laplacian Matrices
   Eigen::SparseMatrix<double> L;
   Eigen::SparseMatrix<double> M;
@@ -24,10 +22,10 @@ void biharmonic_precompute(
   Eigen::SimplicialLDLT<Eigen::SparseMatrix<double>> ldlt(M);
   Eigen::SparseMatrix<double> inv_M = ldlt.solve(M); 
 
-  // Calculate Q = L^T * M^{-1} * L
-  Eigen::SparseMatrix<double> Q = L.transpose() * inv_M * L; 
+  // Calculate Q = L^T * M^{-1} * L = L * M^{-1} * L;
+  Eigen::SparseMatrix<double> Q = L * inv_M * L; 
 
-  // Precompute the matrix
+  // Precompute decomposition for Q in data structure.
   Eigen::SparseMatrix<double> A;
   A.setZero(); 
   igl::min_quad_with_fixed_precompute(Q, b, A, false, data);
