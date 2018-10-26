@@ -6,7 +6,10 @@ void biharmonic_solve(
   const Eigen::MatrixXd & bc,
   Eigen::MatrixXd & D)
 {
-  // REPLACE WITH YOUR CODE
-  D = Eigen::MatrixXd::Zero(data.n,3);
+    const int size = data.n;
+    const int dims = bc.cols();
+
+    min_quad_with_fixed_solve(data, Eigen::MatrixXd::Zero(size, dims),
+                                bc, Eigen::MatrixXd::Zero(0, dims), D);
 }
 
