@@ -1,6 +1,7 @@
 #ifndef BIHARMONIC_SOLVE_H
 #define BIHARMONIC_SOLVE_H
 #include <Eigen/Core>
+#include <igl/min_quad_with_fixed.h>
 
 namespace igl
 {

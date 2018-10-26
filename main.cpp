@@ -210,6 +210,7 @@ R,r      Reset control points
       case 'm':
       {
         method = (Method)(((int)(method)+1)%((int)(NUM_METHODS)));
+        std::cout << "Method is " << method << std::endl; 
         break;
       }
       case 'R':

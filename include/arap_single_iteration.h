@@ -2,6 +2,8 @@
 #define ARAP_SINGLE_ITERATION_H
 #include <Eigen/Core>
 #include <Eigen/Sparse>
+#include <igl/polar_svd3x3.h>
+#include <igl/min_quad_with_fixed.h>
 
 namespace igl
 {

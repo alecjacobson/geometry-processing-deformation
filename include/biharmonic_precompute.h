@@ -1,6 +1,8 @@
 #ifndef BIHARMONIC_PRECOMPUTE_H
 #define BIHARMONIC_PRECOMPUTE_H
 #include <Eigen/Core>
+#include <igl/cotmatrix.h>
+#include <igl/massmatrix.h>
 
 namespace igl
 {

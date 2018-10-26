@@ -2,6 +2,9 @@
 #define ARAP_PRECOMPUTE_H
 #include <Eigen/Core>
 #include <Eigen/Sparse>
+#include "igl/cotmatrix_entries.h"
+#include "igl/cotmatrix.h"
+#include <igl/min_quad_with_fixed.h>
 
 namespace igl
 {
