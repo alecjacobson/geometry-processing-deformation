@@ -26,4 +26,7 @@ void arap_single_iteration(
   const Eigen::MatrixXd & bc,
   Eigen::MatrixXd & U);
 
+void closest_rotation(
+  const Eigen::MatrixXd & M,
+  Eigen::MatrixXd & R);
 #endif

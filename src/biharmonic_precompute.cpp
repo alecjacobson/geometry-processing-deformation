@@ -1,5 +1,8 @@
 #include "biharmonic_precompute.h"
 #include <igl/min_quad_with_fixed.h>
+#include <igl/cotmatrix.h>
+#include <igl/massmatrix.h>
+#include <iostream>
 
 void biharmonic_precompute(
   const Eigen::MatrixXd & V,
@@ -7,7 +10,11 @@ void biharmonic_precompute(
   const Eigen::VectorXi & b,
   igl::min_quad_with_fixed_data<double> & data)
 {
-  // REPLACE WITH YOUR CODE
-  data.n = V.rows();
+	Eigen::SparseMatrix<double> L; 
+	igl::cotmatrix(V, F, L);
+	Eigen::SparseMatrix<double> M;
+	igl::massmatrix(V, F, igl::MASSMATRIX_TYPE_BARYCENTRIC, M);
+	Eigen::SparseMatrix<double> A = L.transpose() * M.cwiseInverse() * L; 
+	min_quad_with_fixed_precompute(A, b, Eigen::SparseMatrix<double>(), false, data);
 }
 
