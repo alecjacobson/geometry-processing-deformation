@@ -3,6 +3,8 @@
 #include <Eigen/Core>
 #include <Eigen/Sparse>
 
+#include "minitrace.h"
+
 namespace igl
 {
   template <typename T> struct min_quad_with_fixed_data;

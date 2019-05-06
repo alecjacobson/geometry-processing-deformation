@@ -11,7 +11,12 @@
 #include <igl/unproject_onto_mesh.h>
 #include <Eigen/Core>
 #include <iostream>
+#include <string>
 #include <stack>
+
+#include "minitrace.h"
+
+std::ofstream outputFile;
 
 // Undoable
 struct State
@@ -23,6 +28,8 @@ struct State
 
 int main(int argc, char *argv[])
 {
+
+  mtr_init("trace.json");
   // Undo Management
   std::stack<State> undo_stack,redo_stack;
   const auto push_undo = [&](State & _s=s)
@@ -57,9 +64,13 @@ int main(int argc, char *argv[])
   igl::min_quad_with_fixed_data<double> biharmonic_data, arap_data;
   Eigen::SparseMatrix<double> arap_K;
 
+  // test IO
+  // outputFile.open("./data.txt", std::ios_base::app);
+
   // Load input meshes
   igl::read_triangle_mesh(
     (argc>1?argv[1]:"../shared/data/decimated-knight.off"),V,F);
+  V = 100 * V;
   U = V;
   igl::opengl::glfw::Viewer viewer;
   std::cout<<R"(
@@ -106,7 +117,7 @@ R,r      Reset control points
         }
         case ARAP:
         {
-          arap_single_iteration(arap_data,arap_K,s.CU,U);
+          arap_single_iteration(arap_data,arap_K,s.CU,outputFile,U);
           break;
         }
       }
@@ -263,7 +274,7 @@ R,r      Reset control points
   {
     if(viewer.core.is_animating && !s.placing_handles && method == ARAP)
     {
-      arap_single_iteration(arap_data,arap_K,s.CU,U);
+      arap_single_iteration(arap_data,arap_K,s.CU,outputFile,U);
       update();
     }
     return false;
@@ -274,5 +285,12 @@ R,r      Reset control points
   viewer.data().face_based = true;
   update();
   viewer.launch();
+
+  mtr_flush();
+  mtr_shutdown();
+
+
+  // outputFile.close();
+
   return EXIT_SUCCESS;
 }

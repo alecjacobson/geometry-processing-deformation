@@ -2,6 +2,8 @@
 #include <igl/min_quad_with_fixed.h>
 #include <igl/cotmatrix.h>
 
+#include "minitrace.h"
+
 using namespace Eigen;
 using namespace std;
 
@@ -37,6 +39,11 @@ void arap_precompute(
       }
     }
   }
+
   K.resize(V.rows(), V.rows() * 3);
+
+  // MTR_BEGIN("C++", "setFrom");
   K.setFromTriplets(triplets.begin(), triplets.end());
+  // MTR_END("C++", "setFrom");
+
 }

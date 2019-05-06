@@ -24,6 +24,7 @@ void arap_single_iteration(
   const igl::min_quad_with_fixed_data<double> & data,
   const Eigen::SparseMatrix<double> & K,
   const Eigen::MatrixXd & bc,
+  std::ostream & stream,
   Eigen::MatrixXd & U);
 
 #endif
