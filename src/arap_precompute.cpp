@@ -42,8 +42,7 @@ void arap_precompute(
 
   K.resize(V.rows(), V.rows() * 3);
 
-  // MTR_BEGIN("C++", "setFrom");
   K.setFromTriplets(triplets.begin(), triplets.end());
-  // MTR_END("C++", "setFrom");
+
 
 }

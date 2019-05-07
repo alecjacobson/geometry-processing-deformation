@@ -13,6 +13,7 @@
 #include <iostream>
 #include <string>
 #include <stack>
+#include <chrono>
 
 #include "minitrace.h"
 
@@ -29,7 +30,7 @@ struct State
 int main(int argc, char *argv[])
 {
 
-  mtr_init("trace.json");
+  // mtr_init("trace.json");
   // Undo Management
   std::stack<State> undo_stack,redo_stack;
   const auto push_undo = [&](State & _s=s)
@@ -64,7 +65,7 @@ int main(int argc, char *argv[])
   igl::min_quad_with_fixed_data<double> biharmonic_data, arap_data;
   Eigen::SparseMatrix<double> arap_K;
 
-  // test IO
+  // // test IO
   // outputFile.open("./data.txt", std::ios_base::app);
 
   // Load input meshes
@@ -286,8 +287,8 @@ R,r      Reset control points
   update();
   viewer.launch();
 
-  mtr_flush();
-  mtr_shutdown();
+  // mtr_flush();
+  // mtr_shutdown();
 
 
   // outputFile.close();
