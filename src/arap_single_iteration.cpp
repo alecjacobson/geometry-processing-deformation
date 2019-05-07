@@ -34,20 +34,29 @@ void arap_single_iteration(
   const Eigen::SparseMatrix<double> & K,
   const Eigen::MatrixXd & bc,
   std::ostream & stream,
+  Eigen::MatrixXd & R_last,
   Eigen::MatrixXd & U)
 {
   // two level optimization: local and global
   // construct C first
-  MatrixXd C = K.transpose() * U;
+  MatrixXd C = K.transpose().eval() * U;
+//   C = R_last.transpose().eval() * C;
   // construct R: a stack of rotation matrices
   MatrixXd R(3 * data.n, 3); // a stack of rotation 3x3 matrix for each vertex
-  Matrix3d Ck, Rk, Rk2, T;
+  Matrix3d Ck, Rk, Rk2, T, R_lastk;
   int iters = 0;
   Matrix3d Q = MatrixXd::Identity(3, 3);
+
+  std::cout << R_last << std::endl;
+
   using nano = std::chrono::nanoseconds;
 
   for (int k = 0; k < data.n; k++) {
+
       Ck = C.block(3*k, 0, 3, 3);
+      R_lastk = R_last.block(3*k, 0, 3, 3);
+
+      Ck = Ck * R_lastk;
 
       // stream << Ck.determinant() << std::endl;
 
@@ -56,6 +65,7 @@ void arap_single_iteration(
       // // svd
       // auto start = std::chrono::high_resolution_clock::now();
       // igl::polar_svd3x3(Ck, Rk);
+      // Rk.eval();
       // auto finish = std::chrono::high_resolution_clock::now();
       // std::cout << "polar_svd3x3() took "
       //     << std::chrono::duration_cast<nano>(finish - start).count()
@@ -64,14 +74,14 @@ void arap_single_iteration(
 
 
 
-      auto start = std::chrono::high_resolution_clock::now();
-      // fit rotation
-      // iters = fit_rotation(Ck, 2.2, false, true, Rk, Q);
-      igl::polar_dec(Ck, Rk, T);
-      auto finish = std::chrono::high_resolution_clock::now();
-      std::cout << "polar_dec() took "
-          << std::chrono::duration_cast<nano>(finish - start).count()
-          << " nanoseconds\n";
+      // auto start = std::chrono::high_resolution_clock::now();
+      // // fit rotation
+      // // iters = fit_rotation(Ck, 2.2, false, true, Rk, Q);
+      // igl::polar_dec(Ck, Rk, T);
+      // auto finish = std::chrono::high_resolution_clock::now();
+      // std::cout << "polar_dec() took "
+      //     << std::chrono::duration_cast<nano>(finish - start).count()
+      //     << " nanoseconds\n";
 
 
 
@@ -83,23 +93,30 @@ void arap_single_iteration(
       // }
 
   
-      // auto start = std::chrono::high_resolution_clock::now();
-      // // fit rotation
-      // // iters = fit_rotation(Ck, 2.2, false, true, Rk, Q);
-      // iters = fit_rotation(Ck, 2.2, false, false, Rk, Rk);
-      // auto finish = std::chrono::high_resolution_clock::now();
-      // std::cout << "fit_rotation() took "
-      //     << std::chrono::duration_cast<nano>(finish - start).count()
-      //     << " nanoseconds\n";
-      // Rk = Rk.transpose().eval();
+      auto start = std::chrono::high_resolution_clock::now();
+      // fit rotation
+      // iters = fit_rotation(Ck, 2.2, false, true, Rk, Q);
+      iters = fit_rotation(Ck, 2.2, false, false, Rk, Rk);
+      auto finish = std::chrono::high_resolution_clock::now();
+      std::cout << "fit_rotation() took "
+          << std::chrono::duration_cast<nano>(finish - start).count()
+          << " nanoseconds\n";
+    //   Rk = Rk.transpose().eval();
 
 
-      // stream << rotationMatrixToAngles(Rk)*180/M_PI << std::endl;
+      R_lastk = R_lastk * Rk;
+
+    //   R_last = Rk;
+
+      stream << rotationMatrixToAngles(Rk)*180/M_PI << std::endl;
       // stream << iters << std::endl;
 
-      R.block(3 * k, 0, 3, 3) = Rk;
+      R.block(3 * k, 0, 3, 3) = R_lastk.transpose().eval();
+
+      R_last.block(3 * k, 0, 3, 3) = R_lastk.transpose().eval();
 
   }
+  
   // solve for new U
   igl::min_quad_with_fixed_solve(data, K * R, bc, MatrixXd(), U);
 

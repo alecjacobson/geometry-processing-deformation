@@ -19,6 +19,9 @@
 
 std::ofstream outputFile;
 
+using namespace Eigen;
+
+
 // Undoable
 struct State
 {
@@ -58,6 +61,8 @@ int main(int argc, char *argv[])
     }
   };
 
+
+  Eigen::MatrixXd R_last;
   Eigen::MatrixXd V,U;
   Eigen::MatrixXi F;
   long sel = -1;
@@ -65,13 +70,22 @@ int main(int argc, char *argv[])
   igl::min_quad_with_fixed_data<double> biharmonic_data, arap_data;
   Eigen::SparseMatrix<double> arap_K;
 
-  // // test IO
-  // outputFile.open("./data.txt", std::ios_base::app);
+  // test IO
+  outputFile.open("./data.txt", std::ios_base::app);
+
 
   // Load input meshes
   igl::read_triangle_mesh(
-    (argc>1?argv[1]:"../shared/data/decimated-knight.off"),V,F);
-  V = 100 * V;
+    (argc>1?argv[1]:"./canonical_tet.obj"),V,F);
+
+  // init R_last
+  R_last.resize(3*V.rows(), 3);
+  for (int i = 0; i < V.rows(); i++) {
+    R_last.block(3 * i, 0, 3, 3) = MatrixXd::Identity(3, 3);
+  }
+  
+
+
   U = V;
   igl::opengl::glfw::Viewer viewer;
   std::cout<<R"(
@@ -118,7 +132,7 @@ R,r      Reset control points
         }
         case ARAP:
         {
-          arap_single_iteration(arap_data,arap_K,s.CU,outputFile,U);
+          arap_single_iteration(arap_data,arap_K,s.CU,outputFile,R_last,U);
           break;
         }
       }
@@ -275,11 +289,13 @@ R,r      Reset control points
   {
     if(viewer.core.is_animating && !s.placing_handles && method == ARAP)
     {
-      arap_single_iteration(arap_data,arap_K,s.CU,outputFile,U);
+      arap_single_iteration(arap_data,arap_K,s.CU,outputFile,R_last,U);
       update();
     }
     return false;
   };
+
+
   viewer.data().set_mesh(V,F);
   viewer.data().show_lines = false;
   viewer.core.is_animating = true;
@@ -287,11 +303,11 @@ R,r      Reset control points
   update();
   viewer.launch();
 
+
   // mtr_flush();
   // mtr_shutdown();
 
-
-  // outputFile.close();
+  outputFile.close();
 
   return EXIT_SUCCESS;
 }
