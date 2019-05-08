@@ -76,13 +76,14 @@ int main(int argc, char *argv[])
 
   // Load input meshes
   igl::read_triangle_mesh(
-    (argc>1?argv[1]:"./canonical_tet.obj"),V,F);
+    (argc>1?argv[1]:"../shared/data/decimated-knight.off"),V,F);
 
   // init R_last
   R_last.resize(3*V.rows(), 3);
   for (int i = 0; i < V.rows(); i++) {
     R_last.block(3 * i, 0, 3, 3) = MatrixXd::Identity(3, 3);
   }
+
   
 
 

@@ -47,16 +47,16 @@ void arap_single_iteration(
   int iters = 0;
   Matrix3d Q = MatrixXd::Identity(3, 3);
 
-  std::cout << R_last << std::endl;
+//   std::cout << R_last << std::endl;
 
   using nano = std::chrono::nanoseconds;
 
   for (int k = 0; k < data.n; k++) {
 
       Ck = C.block(3*k, 0, 3, 3);
-      R_lastk = R_last.block(3*k, 0, 3, 3);
 
-      Ck = Ck * R_lastk;
+      R_lastk = R_last.block(3*k, 0, 3, 3);
+      Ck = R_lastk.transpose().eval() * Ck;
 
       // stream << Ck.determinant() << std::endl;
 
@@ -101,19 +101,21 @@ void arap_single_iteration(
       std::cout << "fit_rotation() took "
           << std::chrono::duration_cast<nano>(finish - start).count()
           << " nanoseconds\n";
-    //   Rk = Rk.transpose().eval();
+      Rk = Rk.transpose().eval();
 
 
       R_lastk = R_lastk * Rk;
 
-    //   R_last = Rk;
 
-      stream << rotationMatrixToAngles(Rk)*180/M_PI << std::endl;
+    //   R_last = Rk;
+      if (k == 1) {
+        stream << "Rk: " << rotationMatrixToAngles(Rk)*180/M_PI << std::endl;
+        // stream << "R_lastk: " << rotationMatrixToAngles(R_lastk)*180/M_PI << std::endl;
+      }
       // stream << iters << std::endl;
 
-      R.block(3 * k, 0, 3, 3) = R_lastk.transpose().eval();
-
-      R_last.block(3 * k, 0, 3, 3) = R_lastk.transpose().eval();
+      R.block(3 * k, 0, 3, 3) = R_lastk.eval();
+      R_last.block(3 * k, 0, 3, 3) = R_lastk.eval();
 
   }
   
