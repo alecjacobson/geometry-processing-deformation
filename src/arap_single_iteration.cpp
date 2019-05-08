@@ -57,10 +57,11 @@ void arap_single_iteration(
 
       R_lastk = R_last.block(3*k, 0, 3, 3);
 
-    //   Ck = R_lastk.transpose().eval() * Ck;
 
 
-      // stream << Ck.determinant() << std::endl;
+
+      Ck = R_lastk.transpose().eval() * Ck;
+
 
 
       // // MTR_BEGIN("C++", "svd");
@@ -75,7 +76,6 @@ void arap_single_iteration(
       // // MTR_END("C++", "svd");
 
 
-
       // auto start = std::chrono::high_resolution_clock::now();
       // // fit rotation
       // // iters = fit_rotation(Ck, 2.2, false, true, Rk, Q);
@@ -84,7 +84,6 @@ void arap_single_iteration(
       // std::cout << "polar_dec() took "
       //     << std::chrono::duration_cast<nano>(finish - start).count()
       //     << " nanoseconds\n";
-
 
 
       // double diff = abs((Ck*Rk).eval().trace() - (Ck*Rk2).eval().trace());
@@ -98,8 +97,14 @@ void arap_single_iteration(
       auto start = std::chrono::high_resolution_clock::now();
       // fit rotation
       R_lastK_T = R_lastk.transpose().eval();
-      iters = fit_rotation(Ck, 2.2, false, true, Rk, R_lastK_T);
-    //   iters = fit_rotation(Ck, 2.2, false, false, Rk, Rk);
+
+
+
+      iters = fit_rotation(Ck, 2.2, false, true, Rk, Q);
+    //   iters = fit_rotation(Ck, 2.2, false, true, Rk, R_lastK_T);
+
+
+
       auto finish = std::chrono::high_resolution_clock::now();
       std::cout << "fit_rotation() took "
           << std::chrono::duration_cast<nano>(finish - start).count()
@@ -107,17 +112,12 @@ void arap_single_iteration(
       Rk = Rk.transpose().eval();
 
 
-    //   R_lastk = R_lastk * Rk;
+      R_lastk = R_lastk * Rk;
+    //   R_lastk = Rk;
 
-      R_lastk = Rk;
-
-
-    //   R_last = Rk;
       if (k == 1) {
         stream << "Rk: " << rotationMatrixToAngles(Rk)*180/M_PI << std::endl;
-        // stream << "R_lastk: " << rotationMatrixToAngles(R_lastk)*180/M_PI << std::endl;
       }
-      // stream << iters << std::endl;
 
       R.block(3 * k, 0, 3, 3) = R_lastk.eval();
       R_last.block(3 * k, 0, 3, 3) = R_lastk.eval();
