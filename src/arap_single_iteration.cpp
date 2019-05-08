@@ -43,7 +43,7 @@ void arap_single_iteration(
 //   C = R_last.transpose().eval() * C;
   // construct R: a stack of rotation matrices
   MatrixXd R(3 * data.n, 3); // a stack of rotation 3x3 matrix for each vertex
-  Matrix3d Ck, Rk, Rk2, T, R_lastk;
+  Matrix3d Ck, Rk, Rk2, T, R_lastk, R_lastK_T;
   int iters = 0;
   Matrix3d Q = MatrixXd::Identity(3, 3);
 
@@ -56,7 +56,9 @@ void arap_single_iteration(
       Ck = C.block(3*k, 0, 3, 3);
 
       R_lastk = R_last.block(3*k, 0, 3, 3);
-      Ck = R_lastk.transpose().eval() * Ck;
+
+    //   Ck = R_lastk.transpose().eval() * Ck;
+
 
       // stream << Ck.determinant() << std::endl;
 
@@ -95,8 +97,9 @@ void arap_single_iteration(
   
       auto start = std::chrono::high_resolution_clock::now();
       // fit rotation
-      // iters = fit_rotation(Ck, 2.2, false, true, Rk, Q);
-      iters = fit_rotation(Ck, 2.2, false, false, Rk, Rk);
+      R_lastK_T = R_lastk.transpose().eval();
+      iters = fit_rotation(Ck, 2.2, false, true, Rk, R_lastK_T);
+    //   iters = fit_rotation(Ck, 2.2, false, false, Rk, Rk);
       auto finish = std::chrono::high_resolution_clock::now();
       std::cout << "fit_rotation() took "
           << std::chrono::duration_cast<nano>(finish - start).count()
@@ -104,7 +107,9 @@ void arap_single_iteration(
       Rk = Rk.transpose().eval();
 
 
-      R_lastk = R_lastk * Rk;
+    //   R_lastk = R_lastk * Rk;
+
+      R_lastk = Rk;
 
 
     //   R_last = Rk;
