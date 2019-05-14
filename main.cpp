@@ -70,8 +70,8 @@ int main(int argc, char *argv[])
   igl::min_quad_with_fixed_data<double> biharmonic_data, arap_data;
   Eigen::SparseMatrix<double> arap_K;
 
-  // test IO
-  outputFile.open("./data.txt", std::ios_base::app);
+  // // test IO
+  // outputFile.open("./data.txt", std::ios_base::app);
 
 
   // Load input meshes
@@ -308,7 +308,7 @@ R,r      Reset control points
   // mtr_flush();
   // mtr_shutdown();
 
-  outputFile.close();
+  // outputFile.close();
 
   return EXIT_SUCCESS;
 }

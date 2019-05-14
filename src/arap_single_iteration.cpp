@@ -6,6 +6,7 @@
 #include <chrono>
 
 #include "fit_rotation.h"
+#include "fit_rotation_sse.h"
 
 #include "minitrace.h"
 
@@ -55,72 +56,37 @@ void arap_single_iteration(
 
       Ck = C.block(3*k, 0, 3, 3);
 
+      // fit rotation
       R_lastk = R_last.block(3*k, 0, 3, 3);
-
-
-
 
       Ck = R_lastk.transpose().eval() * Ck;
 
-
-
-      // // MTR_BEGIN("C++", "svd");
-      // // svd
-      // auto start = std::chrono::high_resolution_clock::now();
-      // igl::polar_svd3x3(Ck, Rk);
-      // Rk.eval();
-      // auto finish = std::chrono::high_resolution_clock::now();
-      // std::cout << "polar_svd3x3() took "
-      //     << std::chrono::duration_cast<nano>(finish - start).count()
-      //     << " nanoseconds\n";
-      // // MTR_END("C++", "svd");
-
-
-      // auto start = std::chrono::high_resolution_clock::now();
-      // // fit rotation
-      // // iters = fit_rotation(Ck, 2.2, false, true, Rk, Q);
-      // igl::polar_dec(Ck, Rk, T);
-      // auto finish = std::chrono::high_resolution_clock::now();
-      // std::cout << "polar_dec() took "
-      //     << std::chrono::duration_cast<nano>(finish - start).count()
-      //     << " nanoseconds\n";
-
-
-      // double diff = abs((Ck*Rk).eval().trace() - (Ck*Rk2).eval().trace());
-
-      // if (diff > 3e-2) {
-      //     std::cout << (Ck*Rk).eval().trace() << std::endl;
-      //     std::cout << (Ck*Rk2.transpose()).eval().trace() << std::endl;
-      // }
-
-  
       auto start = std::chrono::high_resolution_clock::now();
-      // fit rotation
       R_lastK_T = R_lastk.transpose().eval();
 
-
-
-      iters = fit_rotation(Ck, 2.2, false, true, Rk, Q);
-    //   iters = fit_rotation(Ck, 2.2, false, true, Rk, R_lastK_T);
-
-
+      iters = fit_rotation_small_no_sse(Ck, Rk);
 
       auto finish = std::chrono::high_resolution_clock::now();
       std::cout << "fit_rotation() took "
           << std::chrono::duration_cast<nano>(finish - start).count()
           << " nanoseconds\n";
+
       Rk = Rk.transpose().eval();
-
-
       R_lastk = R_lastk * Rk;
     //   R_lastk = Rk;
 
-      if (k == 1) {
-        stream << "Rk: " << rotationMatrixToAngles(Rk)*180/M_PI << std::endl;
-      }
-
       R.block(3 * k, 0, 3, 3) = R_lastk.eval();
       R_last.block(3 * k, 0, 3, 3) = R_lastk.eval();
+
+
+      // // svd
+      // auto start = std::chrono::high_resolution_clock::now();
+      // igl::polar_svd3x3(Ck, Rk);
+      // auto finish = std::chrono::high_resolution_clock::now();
+      // std::cout << "polar_svd3x3() took "
+      //     << std::chrono::duration_cast<nano>(finish - start).count()
+      //     << " nanoseconds\n";
+      // R.block(3 * k, 0, 3, 3) = Rk.eval();
 
   }
   
@@ -128,3 +94,11 @@ void arap_single_iteration(
   igl::min_quad_with_fixed_solve(data, K * R, bc, MatrixXd(), U);
 
 }
+
+
+// iters = fit_rotation(Ck, 2.2, false, true, Rk, Q);
+// iters = fit_rotation(Ck, 2.2, false, true, Rk, R_lastK_T);
+
+// if (k % 100 == 0) {
+//   stream << Ck << std::endl;
+// }
