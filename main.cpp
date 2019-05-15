@@ -70,8 +70,8 @@ int main(int argc, char *argv[])
   igl::min_quad_with_fixed_data<double> biharmonic_data, arap_data;
   Eigen::SparseMatrix<double> arap_K;
 
-  // // test IO
-  // outputFile.open("./data.txt", std::ios_base::app);
+  // test IO
+  outputFile.open("./data.txt", std::ios_base::app);
 
 
   // Load input meshes
@@ -84,7 +84,30 @@ int main(int argc, char *argv[])
     R_last.block(3 * i, 0, 3, 3) = MatrixXd::Identity(3, 3);
   }
 
-  
+  int num_of_group = V.rows()/8+1;
+  int num_of_ele = num_of_group*72;
+
+  // don't forget to initialize your R!!!!!!
+  void *R = NULL;
+  posix_memalign(&R, 32, num_of_ele * sizeof(float));
+  float *Rf = (float *)R;
+  for (int i = 0; i < num_of_group; i++) {
+    for (int j = 0; j < 8; j++) {
+        Rf[i*72+0*8+j] = 1.0; // M(0,0)
+        Rf[i*72+1*8+j] = 0.0; // M(0,1)
+        Rf[i*72+2*8+j] = 0.0; // M(0,2)
+        Rf[i*72+3*8+j] = 0.0; // M(1,0)
+        Rf[i*72+4*8+j] = 1.0; // M(1,1)
+        Rf[i*72+5*8+j] = 0.0; // M(1,2)
+        Rf[i*72+6*8+j] = 0.0; // M(2,0)
+        Rf[i*72+7*8+j] = 0.0; // M(2,1)
+        Rf[i*72+8*8+j] = 1.0; // M(2,2)
+    }
+  }
+
+  void *M = NULL;
+  posix_memalign(&M, 32, num_of_ele * sizeof(float));
+  float *Mf = (float *)M;
 
 
   U = V;
@@ -133,7 +156,7 @@ R,r      Reset control points
         }
         case ARAP:
         {
-          arap_single_iteration(arap_data,arap_K,s.CU,outputFile,R_last,U);
+          arap_single_iteration(arap_data,arap_K,s.CU,outputFile,R_last,U,Rf,Mf,num_of_group);
           break;
         }
       }
@@ -290,7 +313,7 @@ R,r      Reset control points
   {
     if(viewer.core.is_animating && !s.placing_handles && method == ARAP)
     {
-      arap_single_iteration(arap_data,arap_K,s.CU,outputFile,R_last,U);
+      arap_single_iteration(arap_data,arap_K,s.CU,outputFile,R_last,U,Rf,Mf,num_of_group);
       update();
     }
     return false;
@@ -308,7 +331,7 @@ R,r      Reset control points
   // mtr_flush();
   // mtr_shutdown();
 
-  // outputFile.close();
+  outputFile.close();
 
   return EXIT_SUCCESS;
 }

@@ -26,6 +26,9 @@ void arap_single_iteration(
   const Eigen::MatrixXd & bc,
   std::ostream & stream,
   Eigen::MatrixXd & R_last,
-  Eigen::MatrixXd & U);
+  Eigen::MatrixXd & U,
+  float* Rf,
+  float* Mf,
+  int num_of_group);
 
 #endif
