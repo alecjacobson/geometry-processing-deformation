@@ -3,6 +3,8 @@
 #include <Eigen/Core>
 #include <Eigen/Sparse>
 
+using namespace Eigen;
+
 namespace igl
 {
   template <typename T> struct min_quad_with_fixed_data;
@@ -20,7 +22,7 @@ namespace igl
 //   U  #V by dim list of current positions (see output)
 // Outputs:
 //   U  #V by dim list of new positions (see input)
-void arap_single_iteration(
+Vector3d arap_single_iteration(
   const igl::min_quad_with_fixed_data<double> & data,
   const Eigen::SparseMatrix<double> & K,
   const Eigen::MatrixXd & bc,

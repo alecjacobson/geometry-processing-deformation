@@ -1,5 +1,5 @@
 #include "arap_single_iteration.h"
-// #include <igl/polar_svd3x3.h>
+#include <igl/polar_svd3x3.h>
 #include <igl/polar_dec.h>
 #include <igl/min_quad_with_fixed.h>
 #include <iostream>
@@ -32,7 +32,7 @@ const auto rotationMatrixToAngles = [](Eigen::Matrix3d & R) {
 };
 
 
-void arap_single_iteration(
+Vector3d arap_single_iteration(
   const igl::min_quad_with_fixed_data<double> & data,
   const Eigen::SparseMatrix<double> & K,
   const Eigen::MatrixXd & bc,
@@ -46,7 +46,7 @@ void arap_single_iteration(
 
   // two level optimization: local and global
   // construct C first
-  using nano = std::chrono::nanoseconds;
+  using micro = std::chrono::microseconds;
   MatrixXd C = K.transpose().eval() * U;
   MatrixXd R(3 * data.n, 3); // a stack of rotation 3x3 matrix for each vertex
   Matrix3d Ck, Rk, Rk2, T, R_lastk;
@@ -93,9 +93,12 @@ void arap_single_iteration(
       }
   }
   auto finish1 = std::chrono::high_resolution_clock::now();
-    std::cout << "fit rotation overall: "
-    << std::chrono::duration_cast<nano>(finish1 - start1).count()
-    << " nanoseconds\n";
+    // std::cout << "fit rotation overall: "
+    // << std::chrono::duration_cast<micro>(finish1 - start1).count()
+    // << " microseconds\n";
+
+
+  auto local_time = std::chrono::duration_cast<micro>(finish1 - start1).count();
 
 
 
@@ -130,17 +133,21 @@ void arap_single_iteration(
 
 
 
-
+  // global step
   auto start2 = std::chrono::high_resolution_clock::now();
   // solve for new U
   igl::min_quad_with_fixed_solve(data, K * R, bc, MatrixXd(), U);
   auto finish2 = std::chrono::high_resolution_clock::now();
-    std::cout << "min quad: "
-    << std::chrono::duration_cast<nano>(finish2 - start2).count()
-    << " nanoseconds\n";
+    // std::cout << "min quad: "
+    // << std::chrono::duration_cast<micro>(finish2 - start2).count()
+    // << " microseconds\n";
+
+  auto global_time = std::chrono::duration_cast<micro>(finish2 - start2).count();
 
 
 
+
+  return Vector3d(local_time, global_time, 0.);
 
 }
 

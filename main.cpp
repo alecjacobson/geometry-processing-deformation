@@ -17,10 +17,20 @@
 
 #include "minitrace.h"
 
+using namespace Eigen;
+using namespace std;
+
+
 std::ofstream outputFile;
 
-using namespace Eigen;
+double total_local_time = 0;
+double total_global_time = 0;
+int total_iters = 0;
+Vector3d count_time;
 
+
+
+using namespace Eigen;
 
 // Undoable
 struct State
@@ -71,7 +81,7 @@ int main(int argc, char *argv[])
   Eigen::SparseMatrix<double> arap_K;
 
   // test IO
-  outputFile.open("./data.txt", std::ios_base::app);
+  outputFile.open("./axis_angle_decimated_knight.txt", std::ios_base::app);
 
 
   // Load input meshes
@@ -86,6 +96,7 @@ int main(int argc, char *argv[])
 
   int num_of_group = V.rows()/8+1;
   int num_of_ele = num_of_group*72;
+
 
   // don't forget to initialize your R!!!!!!
   void *R = NULL;
@@ -104,6 +115,7 @@ int main(int argc, char *argv[])
         Rf[i*72+8*8+j] = 1.0; // M(2,2)
     }
   }
+
 
   void *M = NULL;
   posix_memalign(&M, 32, num_of_ele * sizeof(float));
@@ -156,7 +168,10 @@ R,r      Reset control points
         }
         case ARAP:
         {
-          arap_single_iteration(arap_data,arap_K,s.CU,outputFile,R_last,U,Rf,Mf,num_of_group);
+          count_time = arap_single_iteration(arap_data,arap_K,s.CU,outputFile,R_last,U,Rf,Mf,num_of_group);
+          total_local_time += count_time(0);
+          total_global_time += count_time(1);
+          total_iters++;
           break;
         }
       }
@@ -313,7 +328,10 @@ R,r      Reset control points
   {
     if(viewer.core.is_animating && !s.placing_handles && method == ARAP)
     {
-      arap_single_iteration(arap_data,arap_K,s.CU,outputFile,R_last,U,Rf,Mf,num_of_group);
+      count_time = arap_single_iteration(arap_data,arap_K,s.CU,outputFile,R_last,U,Rf,Mf,num_of_group);
+      total_local_time += count_time(0);
+      total_global_time += count_time(1);
+      total_iters++;
       update();
     }
     return false;
@@ -333,5 +351,10 @@ R,r      Reset control points
 
   outputFile.close();
 
+  std::cout << "avg local time: " << total_local_time/total_iters << std::endl;
+  std::cout << "avg global time: " << total_global_time/total_iters << std::endl;
+
   return EXIT_SUCCESS;
+
+
 }
