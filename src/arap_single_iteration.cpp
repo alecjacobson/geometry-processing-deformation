@@ -6,6 +6,7 @@
 #include <chrono>
 
 #include "utils.h"
+#include "eigen_svd.h"
 #include "fit_rotation.h"
 #include "fit_rotation_sse.h"
 #include "fit_rotation_avx.h"
@@ -70,14 +71,12 @@ Vector3d arap_single_iteration(
       }
   }
 
-
 //   auto start = std::chrono::high_resolution_clock::now();
   fit_rotation_small_avx(Mf, Rf, num_of_group-1);
 //   auto finish = std::chrono::high_resolution_clock::now();
 //   std::cout << "caylay avx took "
 //       << std::chrono::duration_cast<nano>(finish - start).count()
 //       << std::endl;
-
 
   // new version
   for (int i = 0; i < num_of_group-1; i++) {
@@ -96,40 +95,36 @@ Vector3d arap_single_iteration(
     // std::cout << "fit rotation overall: "
     // << std::chrono::duration_cast<micro>(finish1 - start1).count()
     // << " microseconds\n";
-
-
   auto local_time = std::chrono::duration_cast<micro>(finish1 - start1).count();
 
 
 
 
+  // auto start1 = std::chrono::high_resolution_clock::now();
+  // // old version
+  // for (int k = 0; k < data.n; k++) {
+
+  //     Ck = C.block(3*k, 0, 3, 3);
+
+  //     // fit rotation
+  //     R_lastk = R_last.block(3*k, 0, 3, 3);
+
+  //     Ck = R_lastk.transpose().eval() * Ck;
+
+  //     // igl::polar_svd3x3(Ck, Rk);
+  //     eigen_svd(Ck, Rk);
 
 
-//   auto start1 = std::chrono::high_resolution_clock::now();
-//   // old version
-//   for (int k = 0; k < data.n; k++) {
+  //     R_lastk = R_lastk * Rk;
+  //     R.block(3 * k, 0, 3, 3) = R_lastk.eval();
+  //     R_last.block(3 * k, 0, 3, 3) = R_lastk.eval();
 
-//       Ck = C.block(3*k, 0, 3, 3);
-
-//       // fit rotation
-//       R_lastk = R_last.block(3*k, 0, 3, 3);
-
-//       Ck = R_lastk.transpose().eval() * Ck;
-
-//     //   iters = fit_rotation_small_no_sse(Ck, Rk);
-//       igl::polar_svd3x3(Ck, Rk);
-//     //   stream << rotationMatrixToAxisAngle(Rk) << std::endl;
-
-//       R_lastk = R_lastk * Rk;
-
-//       R.block(3 * k, 0, 3, 3) = R_lastk.eval();
-//       R_last.block(3 * k, 0, 3, 3) = R_lastk.eval();
-
-//   }
-//   auto finish1 = std::chrono::high_resolution_clock::now();
-//     std::cout << "sifakis simd overall: "
-//     << std::chrono::duration_cast<nano>(finish1 - start1).count()
-//     << " nanoseconds\n";
+  // }
+  // auto finish1 = std::chrono::high_resolution_clock::now();
+  //   // std::cout << "sifakis simd overall: "
+  //   // << std::chrono::duration_cast<micro>(finish1 - start1).count()
+  //   // << " nanoseconds\n";
+  // auto local_time = std::chrono::duration_cast<micro>(finish1 - start1).count();
 
 
 
@@ -141,10 +136,7 @@ Vector3d arap_single_iteration(
     // std::cout << "min quad: "
     // << std::chrono::duration_cast<micro>(finish2 - start2).count()
     // << " microseconds\n";
-
   auto global_time = std::chrono::duration_cast<micro>(finish2 - start2).count();
-
-
 
 
   return Vector3d(local_time, global_time, 0.);

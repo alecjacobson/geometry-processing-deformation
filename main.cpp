@@ -176,8 +176,8 @@ R,r      Reset control points
         }
       }
       viewer.data().set_vertices(U);
-      viewer.data().set_colors(method==BIHARMONIC?orange:yellow);
-      viewer.data().set_points(s.CU,method==BIHARMONIC?blue:green);
+      viewer.data().set_colors(method==BIHARMONIC?orange:blue);
+      viewer.data().set_points(s.CU,method==BIHARMONIC?blue:orange);
     }
     viewer.data().compute_normals();
   };
@@ -337,6 +337,8 @@ R,r      Reset control points
     return false;
   };
 
+
+  viewer.core.background_color = Eigen::Vector4f(1,1,1,0);
 
   viewer.data().set_mesh(V,F);
   viewer.data().show_lines = false;
