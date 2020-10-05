@@ -3,8 +3,10 @@
 #include <Eigen/Core>
 #include <Eigen/Sparse>
 
-using namespace Eigen;
+#include "fit_rotation_avx.h"
 
+
+using namespace Eigen;
 namespace igl
 {
   template <typename T> struct min_quad_with_fixed_data;

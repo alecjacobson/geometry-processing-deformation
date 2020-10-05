@@ -92,21 +92,21 @@ int main(int argc, char *argv[])
   int num_of_ele = num_of_group*72;
 
 
-  // don't forget to initialize your R!!!!!!
+  // initialize rotation matrices
   void *R = NULL;
   posix_memalign(&R, 32, num_of_ele * sizeof(float));
   float *Rf = (float *)R;
   for (int i = 0; i < num_of_group; i++) {
     for (int j = 0; j < 8; j++) {
-        Rf[i*72+0*8+j] = 1.0; // M(0,0)
-        Rf[i*72+1*8+j] = 0.0; // M(0,1)
-        Rf[i*72+2*8+j] = 0.0; // M(0,2)
-        Rf[i*72+3*8+j] = 0.0; // M(1,0)
-        Rf[i*72+4*8+j] = 1.0; // M(1,1)
-        Rf[i*72+5*8+j] = 0.0; // M(1,2)
-        Rf[i*72+6*8+j] = 0.0; // M(2,0)
-        Rf[i*72+7*8+j] = 0.0; // M(2,1)
-        Rf[i*72+8*8+j] = 1.0; // M(2,2)
+        Rf[i*72+0*8+j] = 1.0; // R(0,0)
+        Rf[i*72+1*8+j] = 0.0; // R(0,1)
+        Rf[i*72+2*8+j] = 0.0; // R(0,2)
+        Rf[i*72+3*8+j] = 0.0; // R(1,0)
+        Rf[i*72+4*8+j] = 1.0; // R(1,1)
+        Rf[i*72+5*8+j] = 0.0; // R(1,2)
+        Rf[i*72+6*8+j] = 0.0; // R(2,0)
+        Rf[i*72+7*8+j] = 0.0; // R(2,1)
+        Rf[i*72+8*8+j] = 1.0; // R(2,2)
     }
   }
 
