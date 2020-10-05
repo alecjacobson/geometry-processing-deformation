@@ -1,5 +1,3 @@
-#include "biharmonic_precompute.h"
-#include "biharmonic_solve.h"
 #include "arap_precompute.h"
 #include "arap_single_iteration.h"
 #include <igl/min_quad_with_fixed.h>
@@ -76,7 +74,7 @@ int main(int argc, char *argv[])
   Eigen::MatrixXi F;
   long sel = -1;
   Eigen::RowVector3f last_mouse;
-  igl::min_quad_with_fixed_data<double> biharmonic_data, arap_data;
+  igl::min_quad_with_fixed_data<double> arap_data;
   Eigen::SparseMatrix<double> arap_K;
 
   // test IO
@@ -127,7 +125,6 @@ int main(int argc, char *argv[])
 [click]  To place new control point
 [drag]   To move control point
 [space]  Toggle whether placing control points or deforming
-M,m      Switch deformation methods
 U,u      Update deformation (i.e., run another iteration of solver)
 R,r      Reset control points 
 ⌘ Z      Undo
@@ -135,10 +132,8 @@ R,r      Reset control points
 )";
   enum Method
   {
-    BIHARMONIC = 0,
-    ARAP = 1,
-    NUM_METHODS = 2,
-  } method = BIHARMONIC;
+    ARAP = 0,
+  } method = ARAP;
 
   const auto & update = [&]()
   {
@@ -158,13 +153,6 @@ R,r      Reset control points
       switch(method)
       {
         default:
-        case BIHARMONIC:
-        {
-          Eigen::MatrixXd D;
-          biharmonic_solve(biharmonic_data,s.CU-s.CV,D);
-          U = V+D;
-          break;
-        }
         case ARAP:
         {
           count_time = arap_single_iteration(arap_data,arap_K,s.CU,outputFile,R_last,U,Rf,Mf,num_of_group);
@@ -175,8 +163,8 @@ R,r      Reset control points
         }
       }
       viewer.data().set_vertices(U);
-      viewer.data().set_colors(method==BIHARMONIC?orange:blue);
-      viewer.data().set_points(s.CU,method==BIHARMONIC?blue:orange);
+      viewer.data().set_colors(blue);
+      viewer.data().set_points(s.CU,orange);
     }
     viewer.data().compute_normals();
   };
@@ -270,12 +258,6 @@ R,r      Reset control points
   {
     switch(key)
     {
-      case 'M':
-      case 'm':
-      {
-        method = (Method)(((int)(method)+1)%((int)(NUM_METHODS)));
-        break;
-      }
       case 'R':
       case 'r':
       {
@@ -299,7 +281,6 @@ R,r      Reset control points
           Eigen::VectorXi b;
           igl::snap_points(s.CV,V,b);
           // PRECOMPUTATION FOR DEFORMATION
-          biharmonic_precompute(V,F,b,biharmonic_data);
           arap_precompute(V,F,b,arap_data,arap_K);
         }
         break;
