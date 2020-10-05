@@ -20,9 +20,7 @@ using namespace std;
 
 std::ofstream outputFile;
 
-double total_local_time = 0;
-double total_global_time = 0;
-int total_iters = 0;
+
 Vector3d count_time;
 
 
@@ -40,7 +38,6 @@ struct State
 int main(int argc, char *argv[])
 {
 
-  // mtr_init("trace.json");
   // Undo Management
   std::stack<State> undo_stack,redo_stack;
   const auto push_undo = [&](State & _s=s)
@@ -156,9 +153,6 @@ R,r      Reset control points
         case ARAP:
         {
           count_time = arap_single_iteration(arap_data,arap_K,s.CU,outputFile,R_last,U,Rf,Mf,num_of_group);
-          total_local_time += count_time(0);
-          total_global_time += count_time(1);
-          total_iters++;
           break;
         }
       }
@@ -309,9 +303,6 @@ R,r      Reset control points
     if(viewer.core().is_animating && !s.placing_handles && method == ARAP)
     {
       count_time = arap_single_iteration(arap_data,arap_K,s.CU,outputFile,R_last,U,Rf,Mf,num_of_group);
-      total_local_time += count_time(0);
-      total_global_time += count_time(1);
-      total_iters++;
       update();
     }
     return false;
@@ -328,13 +319,8 @@ R,r      Reset control points
   viewer.launch();
 
 
-  // mtr_flush();
-  // mtr_shutdown();
 
   outputFile.close();
-
-  std::cout << "avg local time: " << total_local_time/total_iters << std::endl;
-  std::cout << "avg global time: " << total_global_time/total_iters << std::endl;
 
   return EXIT_SUCCESS;
 

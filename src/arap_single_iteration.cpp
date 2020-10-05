@@ -6,31 +6,7 @@
 #include <chrono>
 
 
-// #include "eigen_svd.h"
-// #include "fit_rotation.h"
-// #include "fit_rotation_sse.h"
-// #include "fit_rotation_avx.h"
-
-// #include "minitrace.h"
-
 using namespace Eigen;
-
-
-const auto rotationMatrixToAngles = [](Eigen::Matrix3d & R) {
-    double sy = sqrt(R(0,0)*R(0,0)+R(1,0)*R(1,0));
-    double theta_x, theta_y, theta_z;
-    if (sy > 1e-6) {
-        theta_x = atan2(R(2, 1), R(2, 2));
-        theta_y = atan2(-R(2, 0), sy);
-        theta_z = atan2(R(1,0), R(0,0));
-    }
-    else {
-        theta_x = atan2(-R(1, 2), R(1, 1));
-        theta_y = atan2(-R(2, 0), sy);
-        theta_z = 0;
-    }
-    return RowVector3d(theta_x, theta_y, theta_z);
-};
 
 
 Vector3d arap_single_iteration(
@@ -47,11 +23,9 @@ Vector3d arap_single_iteration(
 
   // two level optimization: local and global
   // construct C first
-  using micro = std::chrono::microseconds;
   MatrixXd C = K.transpose().eval() * U;
   MatrixXd R(3 * data.n, 3); // a stack of rotation 3x3 matrix for each vertex
-  Matrix3d Ck, Rk, Rk2, T, R_lastk;
-  int iters = 0;
+  Matrix3d Ck, Rk, T, R_lastk;
   Matrix3d Q = MatrixXd::Identity(3, 3);
 
 
@@ -117,26 +91,12 @@ Vector3d arap_single_iteration(
       R_last.block(3 * k, 0, 3, 3) = R_lastk.eval();
 
   }
-  auto finish1 = std::chrono::high_resolution_clock::now();
-    // std::cout << "sifakis simd overall: "
-    // << std::chrono::duration_cast<micro>(finish1 - start1).count()
-    // << " nanoseconds\n";
-  auto local_time = std::chrono::duration_cast<micro>(finish1 - start1).count();
 
 
-
-  // global step
-  auto start2 = std::chrono::high_resolution_clock::now();
   // solve for new U
   igl::min_quad_with_fixed_solve(data, K * R, bc, MatrixXd(), U);
-  auto finish2 = std::chrono::high_resolution_clock::now();
-    // std::cout << "min quad: "
-    // << std::chrono::duration_cast<micro>(finish2 - start2).count()
-    // << " microseconds\n";
-  auto global_time = std::chrono::duration_cast<micro>(finish2 - start2).count();
 
-
-  return Vector3d(local_time, global_time, 0.);
+  return Vector3d(0., 0., 0.);
 
 }
 
