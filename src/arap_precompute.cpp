@@ -2,8 +2,6 @@
 #include <igl/min_quad_with_fixed.h>
 #include <igl/cotmatrix.h>
 
-#include "minitrace.h"
-
 using namespace Eigen;
 using namespace std;
 

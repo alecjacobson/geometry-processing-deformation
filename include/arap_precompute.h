@@ -3,7 +3,6 @@
 #include <Eigen/Core>
 #include <Eigen/Sparse>
 
-#include "minitrace.h"
 
 namespace igl
 {
