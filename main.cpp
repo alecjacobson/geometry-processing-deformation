@@ -9,7 +9,7 @@
 #include <igl/unproject.h>
 #include <igl/snap_points.h>
 #include <igl/unproject_onto_mesh.h>
-#include <Eigen/Core>
+#include <Eigen/core>
 #include <iostream>
 #include <stack>
 
@@ -120,7 +120,7 @@ R,r      Reset control points
     [&](igl::opengl::glfw::Viewer&, int, int)->bool
   {
     last_mouse = Eigen::RowVector3f(
-      viewer.current_mouse_x,viewer.core.viewport(3)-viewer.current_mouse_y,0);
+      viewer.current_mouse_x,viewer.core().viewport(3)-viewer.current_mouse_y,0);
     if(s.placing_handles)
     {
       // Find closest point on mesh to mouse position
@@ -128,9 +128,9 @@ R,r      Reset control points
       Eigen::Vector3f bary;
       if(igl::unproject_onto_mesh(
         last_mouse.head(2),
-        viewer.core.view,
-        viewer.core.proj, 
-        viewer.core.viewport, 
+        viewer.core().view,
+        viewer.core().proj, 
+        viewer.core().viewport, 
         V, F, 
         fid, bary))
       {
@@ -153,8 +153,8 @@ R,r      Reset control points
       Eigen::MatrixXf CP;
       igl::project(
         Eigen::MatrixXf(s.CU.cast<float>()),
-        viewer.core.view,
-        viewer.core.proj, viewer.core.viewport, CP);
+        viewer.core().view,
+        viewer.core().proj, viewer.core().viewport, CP);
       Eigen::VectorXf D = (CP.rowwise()-last_mouse).rowwise().norm();
       sel = (D.minCoeff(&sel) < 30)?sel:-1;
       if(sel != -1)
@@ -174,20 +174,20 @@ R,r      Reset control points
     {
       Eigen::RowVector3f drag_mouse(
         viewer.current_mouse_x,
-        viewer.core.viewport(3) - viewer.current_mouse_y,
+        viewer.core().viewport(3) - viewer.current_mouse_y,
         last_mouse(2));
       Eigen::RowVector3f drag_scene,last_scene;
       igl::unproject(
         drag_mouse,
-        viewer.core.view,
-        viewer.core.proj,
-        viewer.core.viewport,
+        viewer.core().view,
+        viewer.core().proj,
+        viewer.core().viewport,
         drag_scene);
       igl::unproject(
         last_mouse,
-        viewer.core.view,
-        viewer.core.proj,
-        viewer.core.viewport,
+        viewer.core().view,
+        viewer.core().proj,
+        viewer.core().viewport,
         last_scene);
       s.CU.row(sel) += (drag_scene-last_scene).cast<double>();
       last_mouse = drag_mouse;
@@ -261,7 +261,7 @@ R,r      Reset control points
   viewer.callback_pre_draw = 
     [&](igl::opengl::glfw::Viewer &)->bool
   {
-    if(viewer.core.is_animating && !s.placing_handles && method == ARAP)
+    if(viewer.core().is_animating && !s.placing_handles && method == ARAP)
     {
       arap_single_iteration(arap_data,arap_K,s.CU,U);
       update();
@@ -270,7 +270,7 @@ R,r      Reset control points
   };
   viewer.data().set_mesh(V,F);
   viewer.data().show_lines = false;
-  viewer.core.is_animating = true;
+  viewer.core().is_animating = true;
   viewer.data().face_based = true;
   update();
   viewer.launch();
