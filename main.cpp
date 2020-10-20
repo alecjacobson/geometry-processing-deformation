@@ -9,7 +9,7 @@
 #include <igl/unproject.h>
 #include <igl/snap_points.h>
 #include <igl/unproject_onto_mesh.h>
-#include <Eigen/core>
+#include <Eigen/Core>
 #include <iostream>
 #include <stack>
 
