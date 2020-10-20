@@ -1,8 +1,8 @@
 # Geometry Processing - Deformation
 
-> **To get started:** Fork this repository then issue
+> **To get started:** Clone this repository by issuing
 > 
->     git clone --recursive http://github.com/[username]/geometry-processing-deformation.git
+>     git clone --recursive http://github.com/alecjacobson/geometry-processing-deformation.git
 >
 
 ## Installation, Layout, and Compilation
@@ -37,9 +37,9 @@ second](https://en.wikipedia.org/wiki/Frame_rate).
 
 Shape deformation is the transformation from its _rest shape_ to a
 new/current/deformed shape. If the position of a point on some 3D rest shape
- given by $\widehat{\mathbf{x}} \in  \mathbb{R}^{3}$ then we will write that the unknown position
+ given by $\widetilde{\mathbf{x}} \in  \mathbb{R}^{3}$ then we will write that the unknown position
 on the deformed shape is given by $\mathbf{x} \in  \mathbb{R}^{3}$. We can write this point's
-displacement vector as $\mathbf{x} - \widehat{\mathbf{x}} =: \mathbf{d} \in  \mathbb{R}^{3}$.
+displacement vector as $\mathbf{x} - \widetilde{\mathbf{x}} =: \mathbf{d} \in  \mathbb{R}^{3}$.
 
 The propagation of the handles' deformation can be thought of in two
 complementary ways:
@@ -63,26 +63,26 @@ shape will not tear, crack or change its topological features.
 
 If we represent our shape discretely as a [triangle
 mesh](https://en.wikipedia.org/wiki/Triangle_mesh) (e.g., with _rest_ vertices
-in $\widehat{\mathbf{V}}
+in $\widetilde{\mathbf{V}}
 \in  \mathbb{R}^{n \times  3}$ and faces in $F \in  \{1,\ldots ,n\}^{m \times  3}$, then we can _trivially_
 ensure a continuous deformation by determining new vertex positions $\mathbf{V}$. The
 topology (connectivity) of the mesh ($F$) will not change.
 
 #### Generic Distortion Minimization
 
-A rest surface $\widehat{S}$
+A rest surface $\widetilde{S}$
 [immersed](https://en.wikipedia.org/wiki/Immersion_(mathematics)) in $\mathbb{R}^{3}$ can
-be described as a mapping $\widehat{\mathbf{x}}$ from _some_ 2D parametric domain ${\Omega}$. For any
-parameters $u$ and $v$, $\widehat{\mathbf{x}}$ describes the 3D position:
+be described as a mapping $\widetilde{\mathbf{x}}$ from _some_ 2D parametric domain ${\Omega}$. For any
+parameters $u$ and $v$, $\widetilde{\mathbf{x}}$ describes the 3D position:
 
 $$
-\widehat{\mathbf{x}}(u,v) \in  \mathbb{R}^{3}.
+\widetilde{\mathbf{x}}(u,v) \in  \mathbb{R}^{3}.
 $$
 
 
 Similarly the deformed surface can be represented as a position function $\mathbf{x}:
 {\Omega} \Rightarrow  \mathbb{R}^{3}$. The displacement vector field is thus a function taking the
-difference: $\mathbf{d}(u,v) = \mathbf{x}(u,v) - \widehat{\mathbf{x}}(u,v)$.
+difference: $\mathbf{d}(u,v) = \mathbf{x}(u,v) - \widetilde{\mathbf{x}}(u,v)$.
 
 For the handle-based deformation problem we would like to find a new surface
 (defined by $\mathbf{x}$) that:
@@ -94,7 +94,7 @@ We can cast this as an energy optimization problem. Suppose we have
 energy [functional](https://en.wikipedia.org/wiki/Functional_(mathematics))
 $E(\mathbf{x})$ that 
 measures the amount of distortion between the new shape ($\mathbf{x}$) and the rest
-shape $\widehat{x}$, then we could optimize for the best possible shape $\mathbf{x}$ by
+shape $\widetilde{x}$, then we could optimize for the best possible shape $\mathbf{x}$ by
 minimizing $E$:
 
 $$
@@ -117,7 +117,7 @@ an egalitarian way by integrating a _local_ measure of distortion at all points
 on the surface:
 
 $$
-\mathop{\text{min}}_\mathbf{x} \int _{\Omega} \|  e(\mathbf{x}) \| ^{2} \ dA \quad \text{ subject to } \mathbf{x}(u_i, v_i) = \mathbf{g}_i \ \forall  i = \{1, \ldots  , k\},
+\mathop{\text{min}}_\mathbf{x} \int_{\Omega} \|  e(\mathbf{x}) \|^{2} \ dA \quad \text{ subject to } \mathbf{x}(u_i, v_i) = \mathbf{g}_i \ \forall  i = \{1, \ldots  , k\},
 $$
 
 
@@ -126,7 +126,7 @@ distortion. We will now consider different choices for $e$.
 
 ### Linear Methods
 
-If we assume that the deformation between the rest shape given by $\widehat{\mathbf{x}}$
+If we assume that the deformation between the rest shape given by $\widetilde{\mathbf{x}}$
 and the new shape given by $\mathbf{x}$ is _small_ then we can measure the distortion
 of the deformation in terms of the smoothness of the displacement field. This
 simplest methods will integrate the magnitude of derivatives of the
@@ -139,8 +139,8 @@ Let us first consider minimizing the integral of squared variation of the
 displacement field:
 
 $$
-\mathop{\text{min}}_\mathbf{d} \int _{\Omega} \|  {\nabla}\mathbf{d} \| _F^2 \ dA \quad \text{ subject to } \mathbf{d}_i =
-\mathbf{g}_i-\widehat{\mathbf{x}}_i \ \forall  i = \{1, \ldots  , k\},
+\mathop{\text{min}}_\mathbf{d} \int_{\Omega} \|  {\nabla}\mathbf{d} \| _F^2 \ dA \quad \text{ subject to } \mathbf{d}_i =
+\mathbf{g}_i-\widetilde{\mathbf{x}}_i \ \forall  i = \{1, \ldots  , k\},
 $$
 
 where 
@@ -168,7 +168,7 @@ smoothing and parameterization assignments:
 
 $$
 \mathop{\text{min}}_{\mathbf{D}} \mathop\text{tr}{\left(\mathbf{D}^{\mathsf T} \mathbf{L} \mathbf{D}\right)} \quad \text{subject to } \mathbf{D}_\text{handles} =
-\mathbf{g}_\text{handles} - \widehat{\mathbf{V}}_\text{handles},
+\mathbf{g}_\text{handles} - \widetilde{\mathbf{V}}_\text{handles},
 $$
 
 where the rows of $\mathbf{g}_\text{handles} \in  \mathbb{R}^{k \times  3}$ contains the new positions
@@ -201,10 +201,10 @@ operator](https://en.wikipedia.org/wiki/Linear_map). We can alternatively view
 our minimization above in terms of the unknown positions $\mathbf{x}$:
 
 $$
-\mathop{\text{min}}_\mathbf{d} \int _{\Omega} \|  {\nabla}\mathbf{d} \| _F^2 \ dA \Rightarrow  
-\mathop{\text{min}}_\mathbf{x} \int _{\Omega} \|  {\nabla}(\mathbf{x} - \widehat{\mathbf{x}}) \| _F^2 \ dA \Rightarrow  
-\mathop{\text{min}}_\mathbf{x} \int _{\Omega} \|  \underbrace{{\nabla}\mathbf{x}}_\text{after} -
-\underbrace{{\nabla}\widehat{\mathbf{x}}}_\text{before} \| _F^2 \ dA.
+\mathop{\text{min}}_\mathbf{d} \int_{\Omega} \|  {\nabla}\mathbf{d} \| _F^2 \ dA \Rightarrow  
+\mathop{\text{min}}_\mathbf{x} \int_{\Omega} \|  {\nabla}(\mathbf{x} - \widetilde{\mathbf{x}}) \| _F^2 \ dA \Rightarrow  
+\mathop{\text{min}}_\mathbf{x} \int_{\Omega} \|  \underbrace{{\nabla}\mathbf{x}}_\text{after} -
+\underbrace{{\nabla}\widetilde{\mathbf{x}}}_\text{before} \| _F^2 \ dA.
 $$
 
 If we think of the gradient of the position function ${\nabla}\mathbf{x}$ (with respect to the
@@ -230,7 +230,7 @@ and the average (i.e., [centroid](https://en.wikipedia.org/wiki/Centroid)) of
 an infinitesimal region around that point:
 
 $$
-\Delta  f(\mathbf{x}) = \lim_{|B(\mathbf{x})| \rightarrow  0} \frac{1}{|B(\mathbf{x}))|} \int _{B(\mathbf{x})} f(\mathbf{z}) \;d\mathbf{z} - f(\mathbf{x})
+\Delta  f(\mathbf{x}) = \lim_{|B(\mathbf{x})| \rightarrow  0} \frac{1}{|B(\mathbf{x}))|} \int_{B(\mathbf{x})} f(\mathbf{z}) \;d\mathbf{z} - f(\mathbf{x})
 $$
 
 
@@ -250,10 +250,10 @@ descriptor and massage our optimization problem back in terms of
 displacements:
 
 $$
-\mathop{\text{min}}_\mathbf{x} \int _{\Omega} \|  \underbrace{\Delta \mathbf{x}}_\text{after} -
-\underbrace{\Delta \widehat{\mathbf{x}}}_\text{before} \| ^2 \ dA \Rightarrow 
-\mathop{\text{min}}_\mathbf{x} \int _{\Omega} \|  \Delta (\mathbf{x} - \widehat{\mathbf{x}}) \| ^2 \ dA \Rightarrow  
-\mathop{\text{min}}_\mathbf{d} \int _{\Omega} \|  \Delta \mathbf{d} \| ^2 \ dA.
+\mathop{\text{min}}_\mathbf{x} \int_{\Omega} \|  \underbrace{\Delta \mathbf{x}}_\text{after} -
+\underbrace{\Delta \widetilde{\mathbf{x}}}_\text{before} \| ^2 \ dA \Rightarrow 
+\mathop{\text{min}}_\mathbf{x} \int_{\Omega} \|  \Delta (\mathbf{x} - \widetilde{\mathbf{x}}) \| ^2 \ dA \Rightarrow  
+\mathop{\text{min}}_\mathbf{d} \int_{\Omega} \|  \Delta \mathbf{d} \| ^2 \ dA.
 $$
 
 
@@ -287,7 +287,7 @@ $\mathbf{M}^{-1}\mathbf{L} \mathbf{f}$. Integrating this over the mesh we have o
 of the energy:
 
 \begin{align*}
-\int _{\Omega} \| \Delta \mathbf{d}\| ^{2} \;dA &\approx  \tr{ \mathbf{D}^{\mathsf T} \mathbf{L}^{\mathsf T} \mathbf{M}^{-{\mathsf T}} \mathbf{M} \mathbf{M}^{-1} \mathbf{L}
+\int_{\Omega} \| \Delta \mathbf{d}\|^{2} \;dA &\approx  \newcommand{\tr}[1]{\mathop{\text{tr}}\left(#1\right)}\tr{ \mathbf{D}^{\mathsf T} \mathbf{L}^{\mathsf T} \mathbf{M}^{-{\mathsf T}} \mathbf{M} \mathbf{M}^{-1} \mathbf{L}
 \mathbf{D}}\\
 &= \mathop\text{tr}{\left( \mathbf{D}^{\mathsf T} \underbrace{\mathbf{L}^{\mathsf T} \mathbf{M}^{-1} \mathbf{L}}_{\mathbf{Q}} \mathbf{D} \right)},
 \end{align*}
@@ -323,7 +323,7 @@ separate the knowns and unknowns in the energy:
 
 $$
 \mathop{\text{min}}_{\mathbf{D}_\text{u}}
-\tr{(\mathbf{D}_\text{u}^{\mathsf T} \ \mathbf{D}_\text{h}^{\mathsf T})
+\newcommand{\tr}[1]{\mathop{\text{tr}}\left(#1\right)}\tr{(\mathbf{D}_\text{u}^{\mathsf T} \ \mathbf{D}_\text{h}^{\mathsf T})
 \left(\begin{array}{cc}
 \mathbf{Q}_\text{u,u} & \mathbf{Q}_\text{u,h} \\
 \mathbf{Q}_\text{h,u} & \mathbf{Q}_\text{h,h} 
@@ -337,7 +337,7 @@ $$
 
 $$
 \mathop{\text{min}}_{\mathbf{D}_\text{u}}
-\tr{\mathbf{D}_\text{u}^{\mathsf T} \mathbf{Q}_\text{u,u} \mathbf{D}_\text{u} +
+\newcommand{\tr}[1]{\mathop{\text{tr}}\left(#1\right)}\tr{\mathbf{D}_\text{u}^{\mathsf T} \mathbf{Q}_\text{u,u} \mathbf{D}_\text{u} +
 2 \mathbf{D}_\text{u}^{\mathsf T} \mathbf{Q}_\text{u,h} \mathbf{D}_\text{h} + 
 \underbrace{\mathbf{D}_\text{h}^{\mathsf T} \mathbf{Q}_\text{h,h}
 \mathbf{D}_\text{h}}_\text{constant}}
@@ -345,7 +345,7 @@ $$
 
 $$
 \mathop{\text{min}}_{\mathbf{D}_\text{u}} 
-\tr{
+\newcommand{\tr}[1]{\mathop{\text{tr}}\left(#1\right)}\tr{
 \mathbf{D}_\text{u}^{\mathsf T} \mathbf{Q}_\text{u,u} \mathbf{D}_\text{u} +
 2 \mathbf{D}_\text{u}^{\mathsf T} \mathbf{Q}_\text{u,h} \mathbf{D}_\text{h}}
 $$
@@ -398,7 +398,7 @@ to apply _locally_ so that parts of the shape can easily rotate.
 In the scenario where each handle
 $i$ are perfectly transformed by a [rigid
 transformation](https://en.wikipedia.org/wiki/Rigid_transformation) $\mathbf{x}_i =
-\mathbf{R} \widehat{\mathbf{x}}_i + \mathbf{t}$, where $\mathbf{R} \in  SO(3) \subset  \mathbb{R}^{3\times 3}$ is a rotation matrix and
+\mathbf{R} \widetilde{\mathbf{x}}_i + \mathbf{t}$, where $\mathbf{R} \in  SO(3) \subset  \mathbb{R}^{3\times 3}$ is a rotation matrix and
 $\mathbf{t}\in \mathbb{R}^3$ is a translation vector. If an
 [oracle](https://en.wikipedia.org/wiki/Oracle) could only tell us this
 particular rigid transformation then we could repair 
@@ -406,9 +406,9 @@ the gradient-based energy above by pre-rotating the rest shape by this
 transformation:
 
 \begin{align*}
-\int _{\Omega} \|  {\nabla} \mathbf{x} - {\nabla}(\mathbf{R} \widehat{\mathbf{x}} + \mathbf{t}) \| ^{2} \;dA 
-  &= \int _{\Omega} \|  {\nabla} \mathbf{x} - {\nabla}(\mathbf{R} \widehat{\mathbf{x}}) - {\nabla}\mathbf{t}\| ^{2} \;dA \\
-  &= \int _{\Omega} \|  {\nabla} \mathbf{x} - \mathbf{R} {\nabla}\widehat{\mathbf{x}} \| ^{2} \;dA,
+\int_{\Omega} \|  {\nabla} \mathbf{x} - {\nabla}(\mathbf{R} \widetilde{\mathbf{x}} + \mathbf{t}) \|^{2} \;dA 
+  &= \int_{\Omega} \|  {\nabla} \mathbf{x} - {\nabla}(\mathbf{R} \widetilde{\mathbf{x}}) - {\nabla}\mathbf{t}\|^{2} \;dA \\
+  &= \int_{\Omega} \|  {\nabla} \mathbf{x} - \mathbf{R} {\nabla}\widetilde{\mathbf{x}} \|^{2} \;dA,
 \end{align*}
 
 
@@ -416,11 +416,11 @@ where the translation vector $\mathbf{t}$ falls out because a translation has co
 gradient.
 
 We do not know the rotation $\mathbf{R}$ ahead of time, but we could be as generous
-as possible and use the "best" rotation $\mathbf{R} \leftarrow  \mathop{\text{argmin}}_\mathbf{R} \int _{\Omega} \|  {\nabla}\mathbf{x} -  \mathbf{R}
-{\nabla}\widehat{\mathbf{x}} \| ^{2} \;dA$:
+as possible and use the "best" rotation $\mathbf{R} \leftarrow  \mathop{\text{argmin}}_\mathbf{R} \int_{\Omega} \|  {\nabla}\mathbf{x} -  \mathbf{R}
+{\nabla}\widetilde{\mathbf{x}} \|^{2} \;dA$:
 
 $$
-\int _{\Omega} \left\|{\nabla}\mathbf{x} - \left( \mathop{\text{argmin}}_\mathbf{R} \int _{\Omega} \|  {\nabla}\mathbf{x} -  \mathbf{R} {\nabla}\widehat{\mathbf{x}} \| ^{2} \;dA \right){\nabla}\widehat{\mathbf{x}}\right\|^{2} \;dA.
+\int_{\Omega} \left\|{\nabla}\mathbf{x} - \left( \mathop{\text{argmin}}_\mathbf{R} \int_{\Omega} \|  {\nabla}\mathbf{x} -  \mathbf{R} {\nabla}\widetilde{\mathbf{x}} \|^{2} \;dA \right){\nabla}\widetilde{\mathbf{x}}\right\|^{2} \;dA.
 $$
 
 
@@ -428,7 +428,7 @@ If we treat $\mathbf{R}$ as a degree of freedom along with the unknown positions
 $\mathbf{x}$, we can unify this into an optimization over $\mathbf{x}$ and $\mathbf{R}$:
 
 $$
-\mathop{\text{min}}_{\mathbf{x},\mathbf{R}\in SO(3)} \int _{\Omega} \left\|{\nabla}\mathbf{x} - \mathbf{R} {\nabla}\widehat{\mathbf{x}}\right\|^{2} \;dA.
+\mathop{\text{min}}_{\mathbf{x},\mathbf{R}\in SO(3)} \int_{\Omega} \left\|{\nabla}\mathbf{x} - \mathbf{R} {\nabla}\widetilde{\mathbf{x}}\right\|^{2} \;dA.
 $$
 
 
@@ -441,29 +441,29 @@ everywhere, or _as-rigid-as-possible_ (ARAP).
 
 ![](images/knight-arap-large-rotation.gif)
 
-> For embedded solid shapes, we can take the rest shape given by $\widehat{\mathbf{x}}$ as
-> the parameterization ${\Omega}$, so that ${\nabla}\widehat{\mathbf{x}} = \mathbf{I}$. This allows us to rewrite
+> For embedded solid shapes, we can take the rest shape given by $\widetilde{\mathbf{x}}$ as
+> the parameterization ${\Omega}$, so that ${\nabla}\widetilde{\mathbf{x}} = \mathbf{I}$. This allows us to rewrite
 > the as-rigid-as-possible energy as the square of the difference between the
 > [deformation gradient](#deformationgradient) and the closest rotation:
 >
 $$
-\int _{\Omega} \left\|{\nabla}\mathbf{x} - \mathbf{R} {\nabla}\widehat{\mathbf{x}}\right\|^{2} \;dA
+\int_{\Omega} \left\|{\nabla}\mathbf{x} - \mathbf{R} {\nabla}\widetilde{\mathbf{x}}\right\|^{2} \;dA
 $$
 
 $$
-\int _{\Omega} \left\|({\nabla}\mathbf{x} + \mathbf{I} - \mathbf{I}) - \mathbf{R} \mathbf{I} \right\|^{2} \;dA
+\int_{\Omega} \left\|({\nabla}\mathbf{x} + \mathbf{I} - \mathbf{I}) - \mathbf{R} \mathbf{I} \right\|^{2} \;dA
 $$
 
 $$
-\int _{\Omega} \left\|(\mathbf{I} + {\nabla}\mathbf{x} - {\nabla}\widehat{x}) - \mathbf{R} \right\|^{2} \;dA
+\int_{\Omega} \left\|(\mathbf{I} + {\nabla}\mathbf{x} - {\nabla}\widetilde{x}) - \mathbf{R} \right\|^{2} \;dA
 $$
 
 $$
-\int _{\Omega} \left\|(\mathbf{I} + {\nabla}\mathbf{d}) - \mathbf{R} \right\|^{2} \;dA
+\int_{\Omega} \left\|(\mathbf{I} + {\nabla}\mathbf{d}) - \mathbf{R} \right\|^{2} \;dA
 $$
 
 $$
-\int _{\Omega} \left\|\mathbf{F} - \mathbf{R} \right\|^{2} \;dA
+\int_{\Omega} \left\|\mathbf{F} - \mathbf{R} \right\|^{2} \;dA
 $$
 
 >
@@ -483,8 +483,12 @@ gradient energy above as a double sum over all half-edges $ij$ of all faces $f$
 in the mesh:
 
 $$
-\frac12  \int _{\Omega} \|  {\nabla} \mathbf{x} - {\nabla}\widehat{\mathbf{x}}\| ^{2} \;dA = \frac12  {\sum}\limits_{f \in  F} {\sum}\limits_{ ij \in  f} c_{ij} \| 
-(\mathbf{v}_i-\mathbf{v}_j) - (\widehat{\mathbf{v}}_i-\widehat{\mathbf{v}}_j)\| ^{2},
+\frac12  \int_{\Omega} 
+\|  {\nabla} \mathbf{x} - {\nabla}\widetilde{\mathbf{x}}\|^{2} \;dA = 
+\frac12  
+\sum\limits_{f \in  F} 
+\sum\limits_{ ij \in  f} c_{ij} \| 
+(\mathbf{v}_i-\mathbf{v}_j) - (\widetilde{\mathbf{v}}_i-\widetilde{\mathbf{v}}_j)\|^{2},
 $$
 
 where $c_{ij}$ is cotangent of the angle opposite half-edge $ij$.
@@ -493,9 +497,9 @@ To inject localized best fit rotations, we will assign an unknown rotation
 matrix $\mathbf{R}_k$ to each vertex $k$ of the mesh and accounts for a third of the
 energy integrated over incident triangles:
 $$
-\frac12  \int _{\Omega} \|  {\nabla} \mathbf{x} - \mathbf{R} {\nabla}\widehat{\mathbf{x}}\| ^{2} \;dA = 
-\frac{1}{6} {\sum}\limits_{k=1}^n {\sum}\limits_{ ij \in  F(k)} 
-c_{ij} \|  (\mathbf{v}_i-\mathbf{v}_j) - \mathbf{R}_k (\widehat{\mathbf{v}}_i-\widehat{\mathbf{v}}_j)\| ^{2},
+\frac12  \int_{\Omega} \|  {\nabla} \mathbf{x} - \mathbf{R} {\nabla}\widetilde{\mathbf{x}}\|^{2} \;dA = 
+\frac{1}{6} \sum\limits_{k=1}^n \sum\limits_{ ij \in  F(k)} 
+c_{ij} \|  (\mathbf{v}_i-\mathbf{v}_j) - \mathbf{R}_k (\widetilde{\mathbf{v}}_i-\widetilde{\mathbf{v}}_j)\|^{2},
 $$
 
 where $F(k)$ is the set of all faces incident on the $k$-th vertex.
@@ -534,9 +538,9 @@ $\mathbf{V}$ and quadratic in each $\mathbf{R}_k$. Let's start by separating the
 quadratic and linear in $\mathbf{V}$:
 
 $$
-\frac{1}{6} \underbrace{{\sum}\limits_{k=1}^n {\sum}\limits_{ ij \in  F(k)}  c_{ij} (\mathbf{v}_i-\mathbf{v}_j)^{\mathsf T}(\mathbf{v}_i-\mathbf{v}_j)}_\text{quadratic}
+\frac{1}{6} \underbrace{\sum\limits_{k=1}^n \sum\limits_{ ij \in  F(k)}  c_{ij} (\mathbf{v}_i-\mathbf{v}_j)^{\mathsf T}(\mathbf{v}_i-\mathbf{v}_j)}_\text{quadratic}
 +
-\frac{1}{6} \underbrace{{\sum}\limits_{k=1}^n {\sum}\limits_{ ij \in  F(k)}  c_{ij} (\mathbf{v}_i-\mathbf{v}_j)^{\mathsf T} \mathbf{R}_k (\widehat{\mathbf{v}}_i-\widehat{\mathbf{v}}_j)}_\text{linear}
+\frac{1}{6} \underbrace{\sum\limits_{k=1}^n \sum\limits_{ ij \in  F(k)}  c_{ij} (\mathbf{v}_i-\mathbf{v}_j)^{\mathsf T} \mathbf{R}_k (\widetilde{\mathbf{v}}_i-\widetilde{\mathbf{v}}_j)}_\text{linear}
 $$
 
 
@@ -549,7 +553,7 @@ $$
 
 where $\mathbf{L} \in  \mathbb{R}^{n \times  n}$ is the familiar cotangent discrete Laplacian matrix and
 $\mathbf{K} \in  \mathbb{R}^{n \times  3n}$ sparse matrix containing cotangents multiplied against
-differences across edges in the rest mesh (e.g., $\widehat{\mathbf{v}}_i - \widehat{\mathbf{v}}_j$).
+differences across edges in the rest mesh (e.g., $\widetilde{\mathbf{v}}_i - \widetilde{\mathbf{v}}_j$).
 
 > ###### I'm so confused. What's in the $\mathbf{K}$ matrix?
 > 
@@ -558,20 +562,20 @@ differences across edges in the rest mesh (e.g., $\widehat{\mathbf{v}}_i - \wide
 > vertex positions and unknown rotations. We have identified above that we can
 > write this in summation or matrix form:
 $$
-\frac{1}{6} {\sum}\limits_{k=1}^n {\sum}\limits_{ ij \in  F(k)}  c_{ij} (\mathbf{v}_i-\mathbf{v}_j)^{\mathsf T} \mathbf{R}_k (\widehat{\mathbf{v}}_i-\widehat{\mathbf{v}}_j)
+\frac{1}{6} \sum\limits_{k=1}^n \sum\limits_{ ij \in  F(k)}  c_{ij} (\mathbf{v}_i-\mathbf{v}_j)^{\mathsf T} \mathbf{R}_k (\widetilde{\mathbf{v}}_i-\widetilde{\mathbf{v}}_j)
 = \mathop\text{tr}{\left( \mathbf{V}^{\mathsf T} \mathbf{K} \mathbf{R} \right)},
 $$
 
 > but how did we get here?
 > 
 > Let's start with the summation form. The _constants_ of this formula are the
-> $c_{ij}$ terms and the $(\widehat{\mathbf{v}}_i-\widehat{\mathbf{v}}_j)$ terms. Since these always
+> $c_{ij}$ terms and the $(\widetilde{\mathbf{v}}_i-\widetilde{\mathbf{v}}_j)$ terms. Since these always
 > appear together, let us merge them into weighted edge difference vectors
-> $c_{ij} (\widehat{\mathbf{v}}_i-\widehat{\mathbf{v}}_j) =: \widehat{\mathbf{e}}_{ij} \in  \mathbb{R}^{3}$:
+> $c_{ij} (\widetilde{\mathbf{v}}_i-\widetilde{\mathbf{v}}_j) =: \widetilde{\mathbf{e}}_{ij} \in  \mathbb{R}^{3}$:
 > 
 $$
-\frac{1}{6} {\sum}\limits_{k=1}^n {\sum}\limits_{ ij \in  F(k)}  \underbrace{(\mathbf{v}_i-\mathbf{v}_j)^{\mathsf T}
-\mathbf{R}_k \widehat{\mathbf{e}}_{ij}}_{\in \mathbb{R}},
+\frac{1}{6} \sum\limits_{k=1}^n \sum\limits_{ ij \in  F(k)}  \underbrace{(\mathbf{v}_i-\mathbf{v}_j)^{\mathsf T}
+\mathbf{R}_k \widetilde{\mathbf{e}}_{ij}}_{\in \mathbb{R}},
 $$
 
 > the inner term in the summation is an [inner
@@ -579,8 +583,8 @@ $$
 > [scalar](https://en.wikipedia.org/wiki/Scalar_(mathematics)). Let's expose this
 > by expanding the matrix-vector products of the inner-product:
 $$
-\frac{1}{6} {\sum}\limits_{k=1}^n {\sum}\limits_{ ij \in  F(k)} {\sum}\limits_{{\alpha}=1}^3 {\sum}\limits_{{\beta}=1}^3
-(v_i^{\alpha} - v_j^{\alpha})R_k^{{\alpha}{\beta}}\widehat{e}_{ij}^{\beta}.
+\frac{1}{6} \sum\limits_{k=1}^n \sum\limits_{ ij \in  F(k)} \sum\limits_{{\alpha}=1}^3 \sum\limits_{{\beta}=1}^3
+(v_i^{\alpha} - v_j^{\alpha})R_k^{{\alpha}{\beta}}\widetilde{e}_{ij}^{\beta}.
 $$
 
 > 
@@ -590,8 +594,8 @@ $$
 > all faces first, then the half-edges of that face, and then over all
 > per-vertex rotations that involve this half-edge:
 $$
-\frac{1}{6} {\sum}\limits_{f=1}^m {\sum}\limits_{ ij \in  E(f)} \quad  {\sum}\limits_{k | ij \in F(k)} \quad {\sum}\limits_{{\alpha}=1}^3 {\sum}\limits_{{\beta}=1}^3
-(v_i^{\alpha} - v_j^{\alpha})R_k^{{\alpha}{\beta}}\widehat{e}_{ij}^{\beta},
+\frac{1}{6} \sum\limits_{f=1}^m \sum\limits_{ ij \in  E(f)} \quad  \sum\limits_{k | ij \in F(k)} \quad \sum\limits_{{\alpha}=1}^3 \sum\limits_{{\beta}=1}^3
+(v_i^{\alpha} - v_j^{\alpha})R_k^{{\alpha}{\beta}}\widetilde{e}_{ij}^{\beta},
 $$
 
 > where the third sum is over all rotations $k$ such that the half-edge $ij$
@@ -613,7 +617,7 @@ $$
 > where $\mathbf{V}_{\alpha} \in  \mathbb{R}^n$ is ${\alpha}$-th column of $\mathbf{V}$, $\mathbf{R}_{\alpha} \in  \mathbb{R}^{3n}$ is the ${\alpha}$-th column of
 > $\mathbf{R}$ and $\mathbf{K}_{1},\mathbf{K}_{2},\mathbf{K}_{3} \in  \mathbb{R}^{n \times  3n}$ are sparse matrices.
 > 
-> _Further_, the constant term $\widehat{e}^{\beta}_{ij}$ in the summation acts the same on
+> _Further_, the constant term $\widetilde{e}^{\beta}_{ij}$ in the summation acts the same on
 > $(v_i^{\alpha} - v_j^{\alpha})R_k^{{\alpha}{\beta}}$ for any ${\alpha}$ value. This implies that $\mathbf{K}_{1}=\mathbf{K}_{2}=\mathbf{K}_{3}$,
 > so we can reduce the matrix form to:
 $$
@@ -625,8 +629,8 @@ $$
 > row and $w=3k+{\beta}$ chooses the column of $\mathbf{K}$. Treating our nested summation as
 > nested for-loops, we can increment entries in $\mathbf{K}$ 
 \begin{align*}
-K_{i\ 3k+{\beta}} & \mathrel{+}= \widehat{e}_{ij}^{\beta}, \\
-K_{j\ 3k+{\beta}} & \mathrel{+}= -\widehat{e}_{ij}^{\beta}, \\
+K_{i\ 3k+{\beta}} & \mathrel{+}= \widetilde{e}_{ij}^{\beta}, \\
+K_{j\ 3k+{\beta}} & \mathrel{+}= -\widetilde{e}_{ij}^{\beta}, \\
 \end{align*}
 
 > for each half-edge encountered. 
