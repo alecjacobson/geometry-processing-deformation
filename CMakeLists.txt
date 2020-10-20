@@ -14,7 +14,7 @@ include_directories("include/")
 if(USE_SOLUTION)
   file(GLOB SRCFILES solution/*.cpp)
 else()
-  file(GLOB SRCFILES src/*.cpp)
+  file(GLOB SRCFILES source/*.cpp)
 endif()
 
 add_library(core ${SRCFILES})

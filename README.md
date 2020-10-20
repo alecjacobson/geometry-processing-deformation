@@ -581,19 +581,19 @@ number of remaining problems:
  - `igl::cotmatrix`  (or your previous implementation)
  - `igl::massmatrix`  (or your previous implementation)
 
-### `src/biharmonic_precompute.cpp`
+### `source/biharmonic_precompute.cpp`
 
 Precompute data needed to efficiently solve for a biharmonic deformation given
 a mesh with vertices `V` and faces `F` and a list of selected vertices as
 indices `b` into `V`. The output should be a prefacorized system using the
 `data` struct employed by `igl::min_quad_with_fixed`.
 
-### `src/biharmonic_solve.cpp`
+### `source/biharmonic_solve.cpp`
 
 Given precomputation `data` and a list of handle _displacements_ determine
 _displacements_ for all vertices in the mesh.
 
-### `src/arap_precompute.cpp`
+### `source/arap_precompute.cpp`
 
 Precompute data needed to efficiently conduct local-global iterations for an
 arap deformation. This includes the `data` struct employed by
@@ -602,7 +602,7 @@ bilinear form `K` that mixes rotation degrees of freedom with unknown
 positions for preparing the covariance matrices of the local step and the
 linear term of the global step.
 
-### `src/arap_single_iteration.cpp`
+### `source/arap_single_iteration.cpp`
 
 Given precomputed data (`data` and `K`), handle _positions_ `bc` and current
 positions of all vertices `U`, conduct a _single_ iteration of the local-global
