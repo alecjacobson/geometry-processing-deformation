@@ -208,9 +208,9 @@ an infinitesimal region around that point:
 <p align="center"><img src="./tex/3446b76fb53ce9bc1c4a197b8c95320e.svg?invert_in_darkmode" align=middle width=331.80687704999997pt height=40.2286731pt/></p>
 
 
-(see, e.g., "Differential coordinates for local mesh morphing and deformation"
-[Alexa et al. 2003] and expanded upon in "Laplacian Surface Editing"
-[Sorkine et al. 2004]).
+(see, e.g., ["Differential coordinates for local mesh morphing and deformation"
+[Alexa et al. 2003]](papers/Alexa04.pdf) and expanded upon in ["Laplacian Surface Editing"
+[Sorkine et al. 2004]](papers/laplacian-surface-editing.pdf)).
 
 When applied to the embedding function <img src="./tex/b0ea07dc5c00127344a1cad40467b8de.svg?invert_in_darkmode" align=middle width=9.97711604999999pt height=14.611878600000017pt/> the Laplace operator computes the
 difference in _position_ between a point and its local neighborhood. This
