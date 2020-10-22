@@ -234,9 +234,9 @@ $$
 $$
 
 
-(see, e.g., "Differential coordinates for local mesh morphing and deformation"
-[Alexa et al. 2003] and expanded upon in "Laplacian Surface Editing"
-[Sorkine et al. 2004]).
+(see, e.g., ["Differential coordinates for local mesh morphing and deformation"
+[Alexa et al. 2003]](papers/Alexa04.pdf) and expanded upon in ["Laplacian Surface Editing"
+[Sorkine et al. 2004]](papers/laplacian-surface-editing.pdf)).
 
 When applied to the embedding function $\mathbf{x}$ the Laplace operator computes the
 difference in _position_ between a point and its local neighborhood. This
