@@ -435,8 +435,8 @@ $$
 Optimizing this energy will ensure _global_ rotation invariance. To ensure
 _local_ rotation invariance, we can replace $\mathbf{R} \in  SO(3)$ with a spatially
 varying _function_ $\mathbf{R} : {\Omega} \rightarrow  SO(3)$ that outputs a "best" rotation for any
-point on the shape (see "A simple geometric model for elastic deformations"
-[Chao et al. 2010]). In this way, the optimal rotation will be locally rigid
+point on the shape (see ["A simple geometric model for elastic deformations"
+[Chao et al. 2010]](papers/GeomElastic.pdf)). In this way, the optimal rotation will be locally rigid
 everywhere, or _as-rigid-as-possible_ (ARAP).
 
 ![](images/knight-arap-large-rotation.gif)
@@ -528,8 +528,8 @@ Each rotation $\mathbf{R}_k$ only affects the local energy and doesn't interact 
 the _other_ rotations. So each can be optimized _locally_. In contrast, the
 mesh vertex positions $\mathbf{V}$ depend on each other requiring a _global_ solve. In
 the geometry processing literature, this is known as a local-global
-optimization (see "As-rigid-as-possible surface modeling" [Sorkine & Alexa
-2007]). It is also known as "alternating block coordinate descent" because we
+optimization (see ["As-rigid-as-possible surface modeling" [Sorkine & Alexa
+2007]](papers/arap_web.pdf)). It is also known as "alternating block coordinate descent" because we
 have separated the variables into disjoint sets ($\mathbf{V},\mathbf{R}_1,\ldots ,\mathbf{R}_n$) and taking
 the optimal descent direction for each independently.
 

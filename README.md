@@ -355,8 +355,8 @@ If we treat <img src="./tex/6423e0d54c2545769ad013e5f6a4cf94.svg?invert_in_darkm
 Optimizing this energy will ensure _global_ rotation invariance. To ensure
 _local_ rotation invariance, we can replace <img src="./tex/9ef0dc2c2b529f2bad33e83fb198c711.svg?invert_in_darkmode" align=middle width=79.2965943pt height=24.65753399999998pt/> with a spatially
 varying _function_ <img src="./tex/eaff36d2409c381d58217e2c1c5daaf3.svg?invert_in_darkmode" align=middle width=110.34665729999999pt height=24.65753399999998pt/> that outputs a "best" rotation for any
-point on the shape (see "A simple geometric model for elastic deformations"
-[Chao et al. 2010]). In this way, the optimal rotation will be locally rigid
+point on the shape (see ["A simple geometric model for elastic deformations"
+[Chao et al. 2010]](papers/GeomElastic.pdf)). In this way, the optimal rotation will be locally rigid
 everywhere, or _as-rigid-as-possible_ (ARAP).
 
 ![](images/knight-arap-large-rotation.gif)
@@ -427,8 +427,8 @@ Each rotation <img src="./tex/b45c84b1466bdbc8a65b014b93aeac34.svg?invert_in_dar
 the _other_ rotations. So each can be optimized _locally_. In contrast, the
 mesh vertex positions <img src="./tex/26eb59da31fb48cb17abfe4c6dc80375.svg?invert_in_darkmode" align=middle width=14.554737449999989pt height=22.55708729999998pt/> depend on each other requiring a _global_ solve. In
 the geometry processing literature, this is known as a local-global
-optimization (see "As-rigid-as-possible surface modeling" [Sorkine & Alexa
-2007]). It is also known as "alternating block coordinate descent" because we
+optimization (see ["As-rigid-as-possible surface modeling" [Sorkine & Alexa
+2007]](papers/arap_web.pdf)). It is also known as "alternating block coordinate descent" because we
 have separated the variables into disjoint sets (<img src="./tex/4f90daf6c058a218597ba681f5a2ad5d.svg?invert_in_darkmode" align=middle width=102.24653009999999pt height=22.55708729999998pt/>) and taking
 the optimal descent direction for each independently.
 
