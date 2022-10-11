@@ -588,7 +588,7 @@ differences across edges in the rest mesh (e.g., $\widetilde{\mathbf{v}}\_i - \w
 \frac{1}{6} \sum\limits\_{k=1}^n \sum\limits\_{ ij \in  F(k)}  c\_{ij} (\mathbf{v}\_i-\mathbf{v}\_j)^{\mathsf T} \mathbf{R}\_k (\widetilde{\mathbf{v}}\_i-\widetilde{\mathbf{v}}\_j)
 = \text{tr}{\left( \mathbf{V}^{\mathsf T} \mathbf{K} \mathbf{R} \right)},
 $$
-
+>
 > but how did we get here?
 > 
 > Let's start with the summation form. The _constants_ of this formula are the
@@ -600,7 +600,7 @@ $$
 \frac{1}{6} \sum\limits\_{k=1}^n \sum\limits\_{ ij \in  F(k)}  \underbrace{(\mathbf{v}\_i-\mathbf{v}\_j)^{\mathsf T}
 \mathbf{R}\_k \widetilde{\mathbf{e}}\_{ij}}\_{\in \mathbb{R}},
 $$
-
+>
 > the inner term in the summation is an [inner
 > product](https://en.wikipedia.org/wiki/Inner_product_space); that is, a
 > [scalar](https://en.wikipedia.org/wiki/Scalar_(mathematics)). Let's expose this
@@ -610,8 +610,7 @@ $$
 \frac{1}{6} \sum\limits\_{k=1}^n \sum\limits\_{ ij \in  F(k)} \sum\limits\_{{\alpha}=1}^3 \sum\limits\_{{\beta}=1}^3
 (v\_i^{\alpha} - v\_j^{\alpha})R\_k^{{\alpha}{\beta}}\widetilde{e}\_{ij}^{\beta}.
 $$
-
-> 
+>
 > If our mesh is stored as a vertex list and face list, it's not easy/efficient
 > to loop over per-vertex rotations (outer sum) and then over all half-edges of
 > incident faces (second sum). Instead, let's rearrange these sums to loop over
@@ -622,7 +621,7 @@ $$
 \frac{1}{6} \sum\limits\_{f=1}^m \sum\limits\_{ ij \in  E(f)} \quad  \sum\limits\_{k | ij \in F(k)} \quad \sum\limits\_{{\alpha}=1}^3 \sum\limits\_{{\beta}=1}^3
 (v\_i^{\alpha} - v\_j^{\alpha})R\_k^{{\alpha}{\beta}}\widetilde{e}\_{ij}^{\beta},
 $$
-
+>
 > where the third sum is over all rotations $k$ such that the half-edge $ij$
 > belongs to the half-edges of the faces incident on the $k$-th vertex: $k | ij \in F(k)$. Well, this means $k$ can either be $i$ or $j$ or the third vertex of
 > the $f$-th face.
@@ -638,7 +637,7 @@ $$
 \mathbf{V}\_{2}^{\mathsf T} \mathbf{K}\_{2} \mathbf{R}\_{2} +  
 \mathbf{V}\_{3}^{\mathsf T} \mathbf{K}\_{3} \mathbf{R}\_{3},
 $$
-
+>
 > where $\mathbf{V}\_{\alpha} \in  \mathbb{R}^n$ is ${\alpha}$-th column of $\mathbf{V}$, $\mathbf{R}\_{\alpha} \in  \mathbb{R}^{3n}$ is the ${\alpha}$-th column of
 > $\mathbf{R}$ and $\mathbf{K}\_{1},\mathbf{K}\_{2},\mathbf{K}\_{3} \in  \mathbb{R}^{n \times  3n}$ are sparse matrices.
 > 
@@ -649,7 +648,6 @@ $$
 > $$
 \text{tr}{\left(\mathbf{V} \mathbf{K} \mathbf{R}\right)}.
 $$
-
 > 
 > Finally, we can answer what is in each entry $K\_{vw}$, where $v$ chooses the
 > row and $w=3k+{\beta}$ chooses the column of $\mathbf{K}$. Treating our nested summation as
@@ -661,7 +659,7 @@ K\_{i\ 3k+{\beta}} & \mathrel{+}= \widetilde{e}\_{ij}^{\beta}, \\
 K\_{j\ 3k+{\beta}} & \mathrel{+}= -\widetilde{e}\_{ij}^{\beta}, \\
 \end{align*}
 $$
-
+>
 > for each half-edge encountered. 
 
 
