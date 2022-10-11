@@ -450,7 +450,7 @@ If we treat $\mathbf{R}$ as a degree of freedom along with the unknown positions
 $\mathbf{x}$, we can unify this into an optimization over $\mathbf{x}$ and $\mathbf{R}$:
 
 $$
-\mathop{\text{min}}\\_{\mathbf{x},\mathbf{R}\in SO(3)} \int\\_{\Omega} ||{\nabla}\mathbf{x} - \mathbf{R} {\nabla}\widetilde{\mathbf{x}}||^{2} \\, \\, dA.
+\mathop{\text{min}}\_{\mathbf{x},\mathbf{R}\in SO(3)} \int\_{\Omega} ||{\nabla}\mathbf{x} - \mathbf{R} {\nabla}\widetilde{\mathbf{x}}||^{2} \\, \\, dA.
 $$
 
 
