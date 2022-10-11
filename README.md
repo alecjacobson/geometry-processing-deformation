@@ -124,7 +124,7 @@ an egalitarian way by integrating a _local_ measure of distortion at all points
 on the surface:
 
 $$
-\mathop{\text{min}}\_\mathbf{x} \int\_{\Omega} \|  e(\mathbf{x}) \|^{2} \ dA \quad \text{ subject to } \mathbf{x}(u\_i, v\_i) = \mathbf{g}\_i \ \forall  i = \{1, \ldots  , k\},
+\mathop{\text{min}}\_\mathbf{x} \int\_{\Omega} ||  e(\mathbf{x}) ||^{2} \ dA \quad \text{ subject to } \mathbf{x}(u\_i, v\_i) = \mathbf{g}\_i \ \forall  i = \{1, \ldots  , k\},
 $$
 
 
@@ -148,7 +148,7 @@ Let us first consider minimizing the integral of squared variation of the
 displacement field:
 
 $$
-\mathop{\text{min}}\_\mathbf{d} \int\_{\Omega} \|  {\nabla}\mathbf{d} \| \_F^2 \ dA \quad \text{ subject to } \mathbf{d}\_i =
+\mathop{\text{min}}\_\mathbf{d} \int\_{\Omega} ||  {\nabla}\mathbf{d} || \_F^2 \ dA \quad \text{ subject to } \mathbf{d}\_i =
 \mathbf{g}\_i-\widetilde{\mathbf{x}}\_i \ \forall  i = \{1, \ldots  , k\},
 $$
 
@@ -219,10 +219,10 @@ operator](https://en.wikipedia.org/wiki/Linear_map). We can alternatively view
 our minimization above in terms of the unknown positions $\mathbf{x}$:
 
 $$
-\mathop{\text{min}}\_\mathbf{d} \int\_{\Omega} \|  {\nabla}\mathbf{d} \| \_F^2 \ dA \Rightarrow  
-\mathop{\text{min}}\_\mathbf{x} \int\_{\Omega} \|  {\nabla}(\mathbf{x} - \widetilde{\mathbf{x}}) \| \_F^2 \ dA \Rightarrow  
-\mathop{\text{min}}\_\mathbf{x} \int\_{\Omega} \|  \underbrace{{\nabla}\mathbf{x}}\_\text{after} -
-\underbrace{{\nabla}\widetilde{\mathbf{x}}}\_\text{before} \| \_F^2 \ dA.
+\mathop{\text{min}}\_\mathbf{d} \int\_{\Omega} ||  {\nabla}\mathbf{d} || \_F^2 \ dA \Rightarrow  
+\mathop{\text{min}}\_\mathbf{x} \int\_{\Omega} ||  {\nabla}(\mathbf{x} - \widetilde{\mathbf{x}}) || \_F^2 \ dA \Rightarrow  
+\mathop{\text{min}}\_\mathbf{x} \int\_{\Omega} ||  \underbrace{{\nabla}\mathbf{x}}\_\text{after} -
+\underbrace{{\nabla}\widetilde{\mathbf{x}}}\_\text{before} || \_F^2 \ dA.
 $$
 
 If we think of the gradient of the position function ${\nabla}\mathbf{x}$ (with respect to the
@@ -268,10 +268,10 @@ descriptor and massage our optimization problem back in terms of
 displacements:
 
 $$
-\mathop{\text{min}}\_\mathbf{x} \int\_{\Omega} \|  \underbrace{\Delta \mathbf{x}}\_\text{after} -
-\underbrace{\Delta \widetilde{\mathbf{x}}}\_\text{before} \| ^2 \ dA \Rightarrow 
-\mathop{\text{min}}\_\mathbf{x} \int\_{\Omega} \|  \Delta (\mathbf{x} - \widetilde{\mathbf{x}}) \| ^2 \ dA \Rightarrow  
-\mathop{\text{min}}\_\mathbf{d} \int\_{\Omega} \|  \Delta \mathbf{d} \| ^2 \ dA.
+\mathop{\text{min}}\_\mathbf{x} \int\_{\Omega} ||  \underbrace{\Delta \mathbf{x}}\_\text{after} -
+\underbrace{\Delta \widetilde{\mathbf{x}}}\_\text{before} || ^2 \ dA \Rightarrow 
+\mathop{\text{min}}\_\mathbf{x} \int\_{\Omega} ||  \Delta (\mathbf{x} - \widetilde{\mathbf{x}}) || ^2 \ dA \Rightarrow  
+\mathop{\text{min}}\_\mathbf{d} \int\_{\Omega} ||  \Delta \mathbf{d} || ^2 \ dA.
 $$
 
 
@@ -308,7 +308,7 @@ of the energy:
 
 $$
 \begin{align*}
-\int\_{\Omega} \| \Delta \mathbf{d}\|^{2} \\, \\, dA &\approx  \text{tr}{\left( \mathbf{D}^{\mathsf T} \mathbf{L}^{\mathsf T} \mathbf{M}^{-{\mathsf T}} \mathbf{M} \mathbf{M}^{-1} \mathbf{L}
+\int\_{\Omega} || \Delta \mathbf{d}||^{2} \\, \\, dA &\approx  \text{tr}{\left( \mathbf{D}^{\mathsf T} \mathbf{L}^{\mathsf T} \mathbf{M}^{-{\mathsf T}} \mathbf{M} \mathbf{M}^{-1} \mathbf{L}
 \mathbf{D} \right)} \\
 &= \text{tr}{\left( \mathbf{D}^{\mathsf T} \underbrace{\mathbf{L}^{\mathsf T} \mathbf{M}^{-1} \mathbf{L}}\_{\mathbf{Q}} \mathbf{D} \right)},
 \end{align*}
@@ -429,9 +429,9 @@ transformation:
 
 $$
 \begin{align*}
-\int\_{\Omega} \|  {\nabla} \mathbf{x} - {\nabla}(\mathbf{R} \widetilde{\mathbf{x}} + \mathbf{t}) \|^{2} \\, \\, dA 
-  &= \int\_{\Omega} \|  {\nabla} \mathbf{x} - {\nabla}(\mathbf{R} \widetilde{\mathbf{x}}) - {\nabla}\mathbf{t}\|^{2} \\, \\, dA \\
-  &= \int\_{\Omega} \|  {\nabla} \mathbf{x} - \mathbf{R} {\nabla}\widetilde{\mathbf{x}} \|^{2} \\, \\, dA,
+\int\_{\Omega} ||  {\nabla} \mathbf{x} - {\nabla}(\mathbf{R} \widetilde{\mathbf{x}} + \mathbf{t}) ||^{2} \\, \\, dA 
+  &= \int\_{\Omega} ||  {\nabla} \mathbf{x} - {\nabla}(\mathbf{R} \widetilde{\mathbf{x}}) - {\nabla}\mathbf{t}||^{2} \\, \\, dA \\
+  &= \int\_{\Omega} ||  {\nabla} \mathbf{x} - \mathbf{R} {\nabla}\widetilde{\mathbf{x}} ||^{2} \\, \\, dA,
 \end{align*}
 $$
 
@@ -439,10 +439,10 @@ where the translation vector $\mathbf{t}$ falls out because a translation has co
 gradient.
 
 We do not know the rotation $\mathbf{R}$ ahead of time, but we could be as generous
-as possible and use the "best" rotation $\mathbf{R}\leftarrow  \mathop{\text{argmin}}\_\mathbf{R} \int\_{\Omega} \|  {\nabla}\mathbf{x} -  \mathbf{R}{\nabla}\widetilde{\mathbf{x}} \|^{2} \\, \\, dA$:
+as possible and use the "best" rotation $\mathbf{R}\leftarrow  \mathop{\text{argmin}}\_\mathbf{R} \int\_{\Omega} ||  {\nabla}\mathbf{x} -  \mathbf{R}{\nabla}\widetilde{\mathbf{x}} ||^{2} \\, \\, dA$:
 
 $$
-\int_{\Omega} \left\|{\nabla}\mathbf{x} - \left( \mathop{\text{argmin}}_\mathbf{R} \int_{\Omega} \|  {\nabla}\mathbf{x} -  \mathbf{R} {\nabla}\widetilde{\mathbf{x}} \|^{2} \\, \\, dA \right){\nabla}\widetilde{\mathbf{x}}\right\|^{2} \\, \\, dA.
+\int\_{\Omega} ||{\nabla}\mathbf{x} - \left( \mathop{\text{argmin}}\_\mathbf{R} \int\_{\Omega} ||  {\nabla}\mathbf{x} -  \mathbf{R} {\nabla}\widetilde{\mathbf{x}} ||^{2} \\, \\, dA \right){\nabla}\widetilde{\mathbf{x}}||^{2} \\, \\, dA.
 $$
 
 
@@ -450,7 +450,7 @@ If we treat $\mathbf{R}$ as a degree of freedom along with the unknown positions
 $\mathbf{x}$, we can unify this into an optimization over $\mathbf{x}$ and $\mathbf{R}$:
 
 $$
-\mathop{\text{min}}\_{\mathbf{x},\mathbf{R}\in SO(3)} \int\_{\Omega} \left\|{\nabla}\mathbf{x} - \mathbf{R} {\nabla}\widetilde{\mathbf{x}}\right\|^{2} \\, \\, dA.
+\mathop{\text{min}}\\_{\mathbf{x},\mathbf{R}\in SO(3)} \int\\_{\Omega} ||{\nabla}\mathbf{x} - \mathbf{R} {\nabla}\widetilde{\mathbf{x}}||^{2} \\, \\, dA.
 $$
 
 
@@ -469,23 +469,23 @@ everywhere, or _as-rigid-as-possible_ (ARAP).
 > [deformation gradient](#deformationgradient) and the closest rotation:
 >
 $$
-\int_{\Omega} \left\|{\nabla}\mathbf{x} - \mathbf{R} {\nabla}\widetilde{\mathbf{x}}\right\|^{2} \\, \\, dA
+\int_{\Omega} ||{\nabla}\mathbf{x} - \mathbf{R} {\nabla}\widetilde{\mathbf{x}}||^{2} \\, \\, dA
 $$
 
 $$
-\int_{\Omega} \left\|({\nabla}\mathbf{x} + \mathbf{I} - \mathbf{I}) - \mathbf{R} \mathbf{I} \right\|^{2} \\, \\, dA
+\int_{\Omega} ||({\nabla}\mathbf{x} + \mathbf{I} - \mathbf{I}) - \mathbf{R} \mathbf{I} ||^{2} \\, \\, dA
 $$
 
 $$
-\int_{\Omega} \left\|(\mathbf{I} + {\nabla}\mathbf{x} - {\nabla}\widetilde{x}) - \mathbf{R} \right\|^{2} \\, \\, dA
+\int_{\Omega} ||(\mathbf{I} + {\nabla}\mathbf{x} - {\nabla}\widetilde{x}) - \mathbf{R} ||^{2} \\, \\, dA
 $$
 
 $$
-\int_{\Omega} \left\|(\mathbf{I} + {\nabla}\mathbf{d}) - \mathbf{R} \right\|^{2} \\, \\, dA
+\int_{\Omega} ||(\mathbf{I} + {\nabla}\mathbf{d}) - \mathbf{R} ||^{2} \\, \\, dA
 $$
 
 $$
-\int_{\Omega} \left\|\mathbf{F} - \mathbf{R} \right\|^{2} \\, \\, dA
+\int_{\Omega} ||\mathbf{F} - \mathbf{R} ||^{2} \\, \\, dA
 $$
 
 >
@@ -506,11 +506,11 @@ in the mesh:
 
 $$
 \frac12  \int_{\Omega} 
-\|  {\nabla} \mathbf{x} - {\nabla}\widetilde{\mathbf{x}}\|^{2} \\, \\, dA = 
+||  {\nabla} \mathbf{x} - {\nabla}\widetilde{\mathbf{x}}||^{2} \\, \\, dA = 
 \frac12  
 \sum\limits_{f \in  F} 
-\sum\limits_{ ij \in  f} c_{ij} \| 
-(\mathbf{v}_i-\mathbf{v}_j) - (\widetilde{\mathbf{v}}_i-\widetilde{\mathbf{v}}_j)\|^{2},
+\sum\limits_{ ij \in  f} c_{ij} || 
+(\mathbf{v}_i-\mathbf{v}_j) - (\widetilde{\mathbf{v}}_i-\widetilde{\mathbf{v}}_j)||^{2},
 $$
 
 where $c_{ij}$ is cotangent of the angle opposite half-edge $ij$.
@@ -520,9 +520,9 @@ matrix $\mathbf{R}\_k$ to each vertex $k$ of the mesh and accounts for a third o
 energy integrated over incident triangles:
 
 $$
-\frac12  \int\_{\Omega} \|  {\nabla} \mathbf{x} - \mathbf{R} {\nabla}\widetilde{\mathbf{x}}\|^{2} \\, \\, dA = 
+\frac12  \int\_{\Omega} ||  {\nabla} \mathbf{x} - \mathbf{R} {\nabla}\widetilde{\mathbf{x}}||^{2} \\, \\, dA = 
 \frac{1}{6} \sum\limits\_{k=1}^n \sum\limits\_{ ij \in  F(k)} 
-c\_{ij} \|  (\mathbf{v}\_i-\mathbf{v}\_j) - \mathbf{R}\_k (\widetilde{\mathbf{v}}\_i-\widetilde{\mathbf{v}}\_j)\|^{2},
+c\_{ij} ||  (\mathbf{v}\_i-\mathbf{v}\_j) - \mathbf{R}\_k (\widetilde{\mathbf{v}}\_i-\widetilde{\mathbf{v}}\_j)||^{2},
 $$
 
 where $F(k)$ is the set of all faces incident on the $k$-th vertex.
