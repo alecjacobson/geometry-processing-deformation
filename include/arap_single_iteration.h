@@ -17,7 +17,8 @@ namespace igl
 //   data  pre-factorized system matrix etc. (see `arap_precompute`
 //   K  pre-constructed bi-linear term of energy combining rotations and
 //     positions
-//   U  #V by dim list of current positions (see output)
+//   U  #V by dim list of current (not necessarily at rest) positions (see output)
+//   bc  #b by dim list of positions for each handle vertex
 // Outputs:
 //   U  #V by dim list of new positions (see input)
 void arap_single_iteration(
