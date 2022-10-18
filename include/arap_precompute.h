@@ -16,7 +16,7 @@ namespace igl
 // linear term of the global step.
 //
 // Inputs:
-//   V  #V by dim vertex positions
+//   V  #V by dim vertex positions at rest.
 //   F  #F by simplex-size list of element indices
 //   b  #b indices into V of handle vertices
 // Outputs:
